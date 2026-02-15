@@ -1,25 +1,38 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { User, Bell, Moon, Sun, Palette, Zap } from "lucide-react"
-import { useTheme } from "@/hooks/use-theme"
-import { useState } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { User, Bell, Moon, Sun, Palette, Zap } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
+import { useState } from "react";
 
 export function SettingsView() {
-  const { theme, setTheme, toggleTheme, accentColor, setAccentColor } = useTheme()
-  const [notifications, setNotifications] = useState(true)
-  const [emailNotifications, setEmailNotifications] = useState(true)
-  const [autoSave, setAutoSave] = useState(true)
-  const [compactMode, setCompactMode] = useState(false)
-  const [animationLevel, setAnimationLevel] = useState(80)
+  const { theme, setTheme, toggleTheme, accentColor, setAccentColor } =
+    useTheme();
+  const [notifications, setNotifications] = useState(true);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [autoSave, setAutoSave] = useState(true);
+  const [compactMode, setCompactMode] = useState(false);
+  const [animationLevel, setAnimationLevel] = useState(80);
 
   return (
     <div className="space-y-6">
@@ -51,20 +64,31 @@ export function SettingsView() {
           <Card className="dark-card">
             <CardHeader>
               <CardTitle>Account Information</CardTitle>
-              <CardDescription>Your account details and preferences</CardDescription>
+              <CardDescription>
+                Your account details and preferences
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" value="user@example.com" className="dark-input" />
+                  <Input
+                    id="email"
+                    value="user@example.com"
+                    className="dark-input"
+                  />
                   <p className="text-xs text-muted-foreground">
                     Your email address is used for login and notifications
                   </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" defaultValue="John Doe" placeholder="Enter your full name" className="dark-input" />
+                  <Input
+                    id="name"
+                    defaultValue="John Doe"
+                    placeholder="Enter your full name"
+                    className="dark-input"
+                  />
                 </div>
               </div>
 
@@ -78,24 +102,10 @@ export function SettingsView() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="language">Language</Label>
-                <Select defaultValue="en">
-                  <SelectTrigger id="language" className="dark-input">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="fr">French</SelectItem>
-                    <SelectItem value="de">German</SelectItem>
-                    <SelectItem value="es">Spanish</SelectItem>
-                    <SelectItem value="pt">Portuguese</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="flex justify-end pt-4">
-                <Button className="bg-primary hover:bg-primary/90">Save Changes</Button>
+                <Button className="bg-primary hover:bg-primary/90">
+                  Save Changes
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -105,20 +115,26 @@ export function SettingsView() {
           <Card className="dark-card">
             <CardHeader>
               <CardTitle>Theme Settings</CardTitle>
-              <CardDescription>Customize the look and feel of your TaskFlow interface</CardDescription>
+              <CardDescription>
+                Customize the look and feel of your TaskFlow interface
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label className="text-base">Dark Mode</Label>
-                    <p className="text-sm text-muted-foreground">Toggle between light and dark themes</p>
+                    <p className="text-sm text-muted-foreground">
+                      Toggle between light and dark themes
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Sun className="h-4 w-4 text-muted-foreground" />
                     <Switch
                       checked={theme === "dark"}
-                      onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                      onCheckedChange={(checked) =>
+                        setTheme(checked ? "dark" : "light")
+                      }
                     />
                     <Moon className="h-4 w-4 text-muted-foreground" />
                   </div>
@@ -140,10 +156,12 @@ export function SettingsView() {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 hidden">
                   <div className="flex items-center justify-between">
                     <Label>Animation Level</Label>
-                    <span className="text-sm text-muted-foreground">{animationLevel}%</span>
+                    <span className="text-sm text-muted-foreground">
+                      {animationLevel}%
+                    </span>
                   </div>
                   <Slider
                     value={[animationLevel]}
@@ -153,12 +171,17 @@ export function SettingsView() {
                     onValueChange={(value) => setAnimationLevel(value[0])}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Adjust the amount of animations and transitions in the interface
+                    Adjust the amount of animations and transitions in the
+                    interface
                   </p>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <Switch id="compact-mode" checked={compactMode} onCheckedChange={setCompactMode} />
+                <div className="fle items-center space-x-2 hidden">
+                  <Switch
+                    id="compact-mode"
+                    checked={compactMode}
+                    onCheckedChange={setCompactMode}
+                  />
                   <Label htmlFor="compact-mode">Compact Mode</Label>
                 </div>
               </div>
@@ -170,23 +193,35 @@ export function SettingsView() {
           <Card className="dark-card">
             <CardHeader>
               <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>Control how and when you receive notifications</CardDescription>
+              <CardDescription>
+                Control how and when you receive notifications
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-base">Push Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive notifications in the app</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive notifications in the app
+                  </p>
                 </div>
-                <Switch checked={notifications} onCheckedChange={setNotifications} />
+                <Switch
+                  checked={notifications}
+                  onCheckedChange={setNotifications}
+                />
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-base">Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive notifications via email</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive notifications via email
+                  </p>
                 </div>
-                <Switch checked={emailNotifications} onCheckedChange={setEmailNotifications} />
+                <Switch
+                  checked={emailNotifications}
+                  onCheckedChange={setEmailNotifications}
+                />
               </div>
 
               <div className="space-y-2">
@@ -211,20 +246,26 @@ export function SettingsView() {
           <Card className="dark-card">
             <CardHeader>
               <CardTitle>Advanced Settings</CardTitle>
-              <CardDescription>Configure advanced options for TaskFlow</CardDescription>
+              <CardDescription>
+                Configure advanced options for TaskFlow
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-base">Auto-Save</Label>
-                  <p className="text-sm text-muted-foreground">Automatically save changes as you work</p>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically save changes as you work
+                  </p>
                 </div>
                 <Switch checked={autoSave} onCheckedChange={setAutoSave} />
               </div>
 
               <div className="space-y-2">
                 <Label>Data Export</Label>
-                <p className="text-sm text-muted-foreground mb-2">Export all your tasks and notes data</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Export all your tasks and notes data
+                </p>
                 <div className="flex space-x-2">
                   <Button variant="outline" className="dark-input">
                     Export as CSV
@@ -236,7 +277,9 @@ export function SettingsView() {
               </div>
 
               <div className="space-y-2 pt-4 border-t border-border/40">
-                <h3 className="text-sm font-medium text-red-500">Danger Zone</h3>
+                <h3 className="text-sm font-medium text-red-500">
+                  Danger Zone
+                </h3>
                 <p className="text-sm text-muted-foreground mb-2">
                   Permanently delete your account and all associated data
                 </p>
@@ -247,5 +290,5 @@ export function SettingsView() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
