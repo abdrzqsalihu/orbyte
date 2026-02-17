@@ -9,23 +9,25 @@ import {
   Calendar,
   FileText,
   Settings,
-  Bell,
-  Menu,
   Moon,
   Sun,
   LogOut,
   Zap,
+  Menu,
+  ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export function Sidebar() {
   const { theme, toggleTheme } = useTheme();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
@@ -33,202 +35,199 @@ export function Sidebar() {
   const supabase = createClient();
 
   useEffect(() => {
-    // Get the current user on mount
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-
-    // Listen for auth state changes (e.g. session expiry)
+    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
+    toast.loading("Logging out...");
     setIsLoggingOut(true);
     await supabase.auth.signOut();
+    toast.dismiss();
+    toast.success("Logged out successfully");
     router.push("/login");
-    router.refresh(); // Clear server-side session state
+    router.refresh();
   };
 
-  // Get initials from name or email
   const getInitials = () => {
-    if (!user) return "?";
-    const name = user.user_metadata?.full_name || user.user_metadata?.name;
-    if (name) {
+    const name = user?.user_metadata?.full_name || user?.user_metadata?.name;
+    if (name)
       return name
         .split(" ")
         .map((n: string) => n[0])
         .join("")
         .toUpperCase()
         .slice(0, 2);
-    }
-    // Fall back to first 2 chars of email
-    return user.email?.slice(0, 2).toUpperCase() ?? "??";
+    return user?.email?.slice(0, 2).toUpperCase() ?? "??";
   };
 
-  const getDisplayName = () => {
-    return (
-      user?.user_metadata?.full_name ||
-      user?.user_metadata?.name ||
-      // user?.email ||
-      "User"
-    );
-  };
-
-  const getDisplayEmail = () => {
-    return user?.email || "";
-  };
-
-  const isActive = (path: string) => pathname === path;
+  const navItems = [
+    { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Kanban", href: "/dashboard/kanban", icon: Kanban },
+    { name: "Notes", href: "/dashboard/notes", icon: FileText },
+    { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+  ];
 
   const SidebarContent = () => (
-    <>
-      <div className="p-4 border-b border-border/40">
-        <div className="flex items-center">
-          <Zap className="mr-2 h-7 w-7 text-primary" />
-          <h1 className="text-xl font-medium text-white">Orbyte</h1>
+    <div className="flex flex-col h-full bg-background text-foreground px-4 py-8">
+      {/* Brand Logo */}
+      <div className="flex items-center gap-3 px-2 mb-8">
+        {/* <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground"> */}
+        <Zap className="h-6 w-6 text-primary" />
+        {/* </div> */}
+        <span className="text-xl font-bold tracking-tight text-foreground">
+          Orbyte
+        </span>
+      </div>
+
+      {/* Navigation Groups */}
+      <div className="flex-1 space-y-8">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 px-3 mb-4">
+            Main Menu
+          </p>
+          <nav className="gap-1 flex flex-col">
+            {navItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group",
+                    active
+                      ? "bg-secondary text-secondary-foreground font-semibold"
+                      : "hover:bg-secondary/40 text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <item.icon
+                    className={cn(
+                      "h-5 w-5 transition-colors",
+                      active ? "text-primary" : "group-hover:text-primary",
+                    )}
+                  />
+                  <span className="text-sm">{item.name}</span>
+                  {active && (
+                    <ChevronRight className="ml-auto h-4 w-4 opacity-40" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
-      </div>
 
-      <div className="flex-1 overflow-auto p-3">
-        <nav className="space-y-1">
-          <Button
-            variant={isActive("/dashboard") ? "default" : "ghost"}
-            className={`w-full justify-start ${isActive("/dashboard") ? "bg-accent" : ""}`}
-            asChild
-          >
-            <Link href="/dashboard">
-              <LayoutDashboard className="h-5 w-5 mr-3" />
-              Dashboard
-            </Link>
-          </Button>
-
-          <Button
-            variant={isActive("/dashboard/kanban") ? "default" : "ghost"}
-            className={`w-full justify-start ${isActive("/dashboard/kanban") ? "bg-accent" : ""}`}
-            asChild
-          >
-            <Link href="/dashboard/kanban">
-              <Kanban className="h-5 w-5 mr-3" />
-              Kanban Board
-            </Link>
-          </Button>
-
-          <Button
-            variant={isActive("/dashboard/notes") ? "default" : "ghost"}
-            className={`w-full justify-start ${isActive("/dashboard/notes") ? "bg-accent" : ""}`}
-            asChild
-          >
-            <Link href="/dashboard/notes">
-              <FileText className="h-5 w-5 mr-3" />
-              Notes
-            </Link>
-          </Button>
-
-          <Button
-            variant={isActive("/dashboard/calendar") ? "default" : "ghost"}
-            className={`w-full justify-start ${isActive("/dashboard/calendar") ? "bg-accent" : ""}`}
-            asChild
-          >
-            <Link href="/dashboard/calendar">
-              <Calendar className="h-5 w-5 mr-3" />
-              Calendar
-            </Link>
-          </Button>
-
-          <Button
-            variant={isActive("/dashboard/settings") ? "default" : "ghost"}
-            className={`w-full justify-start ${isActive("/dashboard/settings") ? "bg-accent" : ""}`}
-            asChild
-          >
-            <Link href="/dashboard/settings">
-              <Settings className="h-5 w-5 mr-3" />
-              Settings
-            </Link>
-          </Button>
-        </nav>
-      </div>
-
-      <div className="border-t border-border/40 p-4">
-        <div className="flex items-center mb-4">
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full h-8 w-8 border-border/40 dark-input"
-          >
-            <Bell className="h-4 w-4" />
-          </Button>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 px-3 mb-4">
+            System
+          </p>
           <Link
             href="/dashboard/settings"
-            className="rounded-full flex items-center justify-center h-8 w-8 ml-2 border-border/40 dark-input hover:bg-primary"
-          >
-            <Settings className="h-4 w-4" />
-          </Link>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full h-8 w-8 ml-2 border-border/40 dark-input"
-            onClick={toggleTheme}
-          >
-            {theme === "dark" ? (
-              <Moon className="h-4 w-4" />
-            ) : (
-              <Sun className="h-4 w-4" />
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
+              pathname === "/dashboard/settings"
+                ? "bg-secondary text-secondary-foreground font-semibold"
+                : "hover:bg-secondary/40 text-muted-foreground hover:text-foreground",
             )}
-          </Button>
+          >
+            <Settings className="h-5 w-5" />
+            <span className="text-sm">Settings</span>
+          </Link>
         </div>
-        <div className="flex items-center">
-          <Avatar>
-            <AvatarFallback className="bg-accent text-white">
-              {getInitials()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="ml-3 min-w-0">
-            <p className="text-sm font-medium truncate">{getDisplayName()}</p>
-            <p className="text-xs text-muted-foreground truncate">
-              {getDisplayEmail()}
-            </p>
-          </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-auto space-y-4">
+        <div className="flex items-center justify-between px-2">
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto shrink-0"
+            onClick={toggleTheme}
+            className="rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+          >
+            {theme === "dark" ? (
+              <Moon className="h-4 w-4 transition-all" />
+            ) : (
+              <Sun className="h-4 w-4 transition-all" />
+            )}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleLogout}
             disabled={isLoggingOut}
+            className="h-9 w-9 rounded-xl text-muted-foreground hover:bg-destructive/10 transition-all cursor-pointer hover:text-destructive"
             title="Log out"
           >
-            <LogOut className={`h-4 w-4 ${isLoggingOut ? "opacity-50" : ""}`} />
+            <LogOut className="h-4 w-4" />
           </Button>
         </div>
+
+        {/* User Card */}
+        <div className="p-3 bg-secondary/30 rounded-xl border border-border/50 transition-colors hover:bg-secondary/40">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10 border-2 border-background ring-1 ring-border/10 overflow-hidden">
+              {/* 2. ADD THIS AvatarImage TAG HERE */}
+              <AvatarImage
+                src={
+                  user?.user_metadata?.avatar_url ||
+                  user?.user_metadata?.picture
+                }
+                alt={user?.user_metadata?.full_name || "User"}
+              />
+              <AvatarFallback className="bg-primary text-primary-foreground text-xs font-black">
+                {getInitials()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <p className="text-sm font-bold truncate leading-none">
+                  {user?.user_metadata?.full_name ||
+                    user?.user_metadata?.name ||
+                    "User Account"}
+                </p>
+                <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" />
+              </div>
+              <p className="text-[11px] text-muted-foreground truncate font-medium">
+                {user?.email}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 
   return (
     <>
-      {/* Mobile menu button */}
-      <div className="md:hidden fixed top-4 left-4 z-30">
-        <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+      <div className="md:hidden fixed top-4 left-4 z-40">
+        <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="h-10 w-10">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-background border-border/50 shadow-none"
+            >
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64 deep-black">
+          <SheetContent
+            side="left"
+            className="p-0 w-80 border-none shadow-none"
+          >
             <SidebarContent />
           </SheetContent>
         </Sheet>
       </div>
 
-      {/* Desktop sidebar */}
-      <div className="hidden md:flex w-64 deep-black border-r border-border/40 flex-col h-full">
+      <aside className="hidden md:flex w-72 flex-col h-screen sticky top-0 border-r border-border/50 bg-background">
         <SidebarContent />
-      </div>
+      </aside>
     </>
   );
 }
