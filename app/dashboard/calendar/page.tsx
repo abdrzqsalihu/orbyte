@@ -1,6 +1,23 @@
-import { initialTasks } from "@/lib/data"
-import { CalendarView } from "@/components/calendar-view"
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { CalendarView } from "@/components/calendar-view";
 
-export default function CalendarPage() {
-  return <CalendarView tasks={initialTasks} />
+export default async function CalendarPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: tasks, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .order("due_date", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching tasks:", error);
+  }
+
+  return <CalendarView initialTasks={tasks || []} userId={user.id} />;
 }

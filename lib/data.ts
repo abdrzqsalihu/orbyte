@@ -1,14 +1,15 @@
-import type { Task, Note } from "./types"
+import type { Task, Note } from "./types";
 
 export const initialTasks: Task[] = [
   {
     id: "1",
     title: "Finalize Q3 report",
-    description: "Complete the quarterly financial report with all metrics and KPIs",
+    description:
+      "Complete the quarterly financial report with all metrics and KPIs",
     status: "todo",
     priority: "high",
     category: "work",
-    dueDate: "2023-09-30",
+    dueDate: "2026-02-07",
   },
   {
     id: "2",
@@ -17,7 +18,7 @@ export const initialTasks: Task[] = [
     status: "inprogress",
     priority: "medium",
     category: "work",
-    dueDate: "2023-10-15",
+    dueDate: "2026-02-25",
   },
   {
     id: "3",
@@ -26,7 +27,7 @@ export const initialTasks: Task[] = [
     status: "todo",
     priority: "medium",
     category: "work",
-    dueDate: "2023-09-25",
+    dueDate: "2026-02-2",
   },
   {
     id: "4",
@@ -35,7 +36,7 @@ export const initialTasks: Task[] = [
     status: "todo",
     priority: "low",
     category: "personal",
-    dueDate: "2023-09-24",
+    dueDate: "2026-02-12",
   },
   {
     id: "5",
@@ -44,7 +45,7 @@ export const initialTasks: Task[] = [
     status: "inprogress",
     priority: "low",
     category: "education",
-    dueDate: "2023-10-10",
+    dueDate: "2026-02-10",
   },
   {
     id: "6",
@@ -53,7 +54,7 @@ export const initialTasks: Task[] = [
     status: "todo",
     priority: "high",
     category: "health",
-    dueDate: "2023-09-28",
+    dueDate: "2026-02-28",
   },
   {
     id: "7",
@@ -62,16 +63,17 @@ export const initialTasks: Task[] = [
     status: "done",
     priority: "high",
     category: "work",
-    dueDate: "2023-09-20",
+    dueDate: "2026-02-20",
   },
-]
+];
 
 export const initialNotes: Note[] = [
   {
     id: "1",
     title: "Project Ideas",
-    content: "- Mobile app for task management\n- AI-powered content generator\n- Community platform for developers",
-    createdAt: "2023-09-15",
+    content:
+      "- Mobile app for task management\n- AI-powered content generator\n- Community platform for developers",
+    createdAt: "2026-02-15",
   },
   {
     id: "2",
@@ -87,4 +89,4 @@ export const initialNotes: Note[] = [
       "React Advanced Patterns: https://example.com/react\nTypeScript Deep Dive: https://example.com/typescript\nUI/UX Design Principles: https://example.com/design",
     createdAt: "2023-09-20",
   },
-]
+];
