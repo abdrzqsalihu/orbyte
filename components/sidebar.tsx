@@ -191,7 +191,7 @@ export function Sidebar() {
                     user?.user_metadata?.name ||
                     "User Account"}
                 </p>
-                <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" />
+                {/* <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" /> */}
               </div>
               <p className="text-[11px] text-muted-foreground truncate font-medium">
                 {user?.email}
