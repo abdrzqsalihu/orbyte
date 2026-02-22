@@ -8,6 +8,7 @@ export interface Task {
   category: string;
   due_date: string | null;
   position: number;
+  completed_at: string | null;
   created_at: string;
   updated_at: string;
 }
