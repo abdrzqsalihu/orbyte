@@ -83,17 +83,30 @@ export default function Login() {
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
       {/* Branding/Visual */}
-      <div className="relative hidden flex-col bg-muted p-10 lg:flex dark:border-r">
-        <div className="flex items-center text-lg font-medium">
+      <div className="relative hidden flex-col bg-muted p-10 lg:flex dark:border-r overflow-hidden">
+        {/* Abstract Gradient Background */}
+        <div
+          className="absolute inset-0 z-0 opacity-40 dark:opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20% 20%, hsl(var(--primary)) 0%, transparent 40%), 
+                          radial-gradient(circle at 80% 80%, hsl(var(--primary)) 0%, transparent 40%)`,
+          }}
+        />
+
+        {/* Content stays on top with z-10 */}
+        <div className="relative z-10 flex items-center text-lg font-medium">
           <Zap className="mr-2 h-6 w-6 text-primary" />
           Orbyte
         </div>
-        <div className="mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-2xl font-light">
-              The central orbit for your entire workflow. A high-velocity task
-              management platform designed to help you organize your day, hit
-              your milestones, and execute every project with absolute
+
+        <div className="relative z-10 mt-auto">
+          <blockquote className="space-y-4">
+            <p className="text-3xl font-medium tracking-tight leading-tight">
+              The central orbit for your entire workflow.
+            </p>
+            <p className="text-lg text-muted-foreground font-light">
+              A task management platform designed to help you organize your day,
+              hit your milestones, and execute every project with absolute
               precision.
             </p>
           </blockquote>
