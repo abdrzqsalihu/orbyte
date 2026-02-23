@@ -231,12 +231,12 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
           {columns.map((column) => (
             <div
               key={column.id}
-              className="flex flex-col dark-card rounded-xl border border-border"
+              className="flex flex-col dark-card bg-card rounded-xl border border-border/50"
             >
               <h3 className="font-medium text-sm p-4 border-b border-border flex items-center justify-between">
                 {column.title} (
                 {tasks.filter((task) => task.status === column.id).length})
-                <Badge variant="outline" className="bg-secondary text-xs">
+                <Badge variant="outline" className="bg-secondary/50 text-xs">
                   {column.badge}
                 </Badge>
               </h3>
@@ -261,7 +261,7 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className="mb-3 bg-secondary border-border hover:bg-secondary/80 transition-colors"
+                              className="mb-3 bg-secondary/60 border-border/50 hover:bg-secondary/70 transition-colors shadow-none"
                             >
                               <CardHeader className="p-3 pb-0 flex justify-between items-start">
                                 <div>

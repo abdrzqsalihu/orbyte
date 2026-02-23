@@ -118,7 +118,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
           filteredNotes.map((note) => (
             <Card
               key={note.id}
-              className="h-fit bg-secondary border-border hover:bg-secondary/80 transition-colors"
+              className="h-fit dark-card bg-card border-border/50 hover:bg-card/80 transition-colors shadow-none"
             >
               <CardHeader className="pb-2 flex flex-row justify-between items-start">
                 <CardTitle className="text-lg">{note.title}</CardTitle>

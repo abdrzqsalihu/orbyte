@@ -31,6 +31,7 @@ import {
   subWeeks,
 } from "date-fns";
 import { toast } from "sonner";
+import { useTheme } from "@/hooks/use-theme";
 
 interface OverviewDashboardProps {
   initialTasks: Task[];
@@ -41,6 +42,12 @@ export function OverviewDashboard({
   initialTasks,
   userId,
 }: OverviewDashboardProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const tickColor = isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
+  const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)";
+  const legendColor = isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
+
   const [tasks, setTasks] = useState(initialTasks);
   const [timeframe, setTimeframe] = useState("week");
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -404,29 +411,18 @@ export function OverviewDashboard({
                   scales: {
                     y: {
                       beginAtZero: true,
-                      grid: {
-                        color: "rgba(255, 255, 255, 0.1)",
-                      },
-                      ticks: {
-                        color: "rgba(255, 255, 255, 0.7)",
-                        stepSize: 1,
-                      },
+                      grid: { color: gridColor },
+                      ticks: { color: tickColor, stepSize: 1 },
                     },
                     x: {
-                      grid: {
-                        display: false,
-                      },
-                      ticks: {
-                        color: "rgba(255, 255, 255, 0.7)",
-                      },
+                      grid: { display: false },
+                      ticks: { color: tickColor },
                     },
                   },
                   plugins: {
                     legend: {
                       position: "top",
-                      labels: {
-                        color: "rgba(255, 255, 255, 0.7)",
-                      },
+                      labels: { color: legendColor },
                     },
                   },
                 }}
@@ -452,9 +448,7 @@ export function OverviewDashboard({
                   plugins: {
                     legend: {
                       position: "bottom",
-                      labels: {
-                        color: "rgba(255, 255, 255, 0.7)",
-                      },
+                      labels: { color: legendColor },
                     },
                   },
                 }}
@@ -486,27 +480,19 @@ export function OverviewDashboard({
                     y: {
                       beginAtZero: true,
                       max: 100,
-                      grid: {
-                        color: "rgba(255, 255, 255, 0.1)",
-                      },
+                      grid: { color: gridColor },
                       ticks: {
-                        color: "rgba(255, 255, 255, 0.7)",
+                        color: tickColor,
                         callback: (value: string) => value + "%",
                       },
                     },
                     x: {
-                      grid: {
-                        display: false,
-                      },
-                      ticks: {
-                        color: "rgba(255, 255, 255, 0.7)",
-                      },
+                      grid: { display: false },
+                      ticks: { color: tickColor },
                     },
                   },
                   plugins: {
-                    legend: {
-                      display: false,
-                    },
+                    legend: { display: false },
                   },
                 }}
               />

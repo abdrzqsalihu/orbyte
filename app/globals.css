@@ -11,7 +11,6 @@
 
 @layer base {
   :root {
-    /* Warm off-white base instead of stark white */
     --background: 220 20% 97%;
     --foreground: 224 15% 12%;
 
@@ -89,7 +88,6 @@
     border: 1px solid rgba(var(--border) / 0.7);
   } */
 
-  /* Light mode: dot-grid with neutral gray */
   .grid-bg {
     background-color: hsl(var(--background));
     background-image:
@@ -110,15 +108,12 @@
     background-size: 24px 24px, 24px 24px, 24px 24px;
   }
 
-  /* Dark mode: restore your original grid exactly */
   .dark .grid-bg {
     background-image:
       linear-gradient(rgba(var(--accent) / 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(var(--accent) / 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
   }
-
-  /* Dark theme enhancements — untouched */
   .dark .deep-black {
     background-color: #080a10;
   }
