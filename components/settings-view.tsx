@@ -250,7 +250,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
         </TabsList>
 
         <TabsContent value="account" className="space-y-6">
-          <Card className="dark-card">
+          <Card className="dark-card shadow-none border border-border/40">
             <CardHeader>
               <CardTitle>Account Information</CardTitle>
               <CardDescription>
@@ -281,7 +281,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Enter your full name"
-                    className="dark-input"
+                    className="dark-input shadow-none border border-border/40"
                   />
                 </div>
               </div>
@@ -315,7 +315,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter current password"
-                    className="dark-input"
+                    className="dark-input shadow-none border border-border/40"
                   />
                 </div>
 
@@ -328,7 +328,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Enter new password"
-                      className="dark-input"
+                      className="dark-input shadow-none border border-border/40"
                     />
                   </div>
 
@@ -340,7 +340,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm new password"
-                      className="dark-input"
+                      className="dark-input shadow-none border border-border/40"
                     />
                   </div>
                 </div>
@@ -373,7 +373,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
         </TabsContent>
 
         <TabsContent value="appearance" className="space-y-6">
-          <Card className="dark-card">
+          <Card className="dark-card shadow-none border border-border/40">
             <CardHeader>
               <CardTitle>Theme Settings</CardTitle>
               <CardDescription>
@@ -404,7 +404,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                 <div className="space-y-2">
                   <Label>Accent Color</Label>
                   <Select value={accentColor} onValueChange={setAccentColor}>
-                    <SelectTrigger className="dark-input">
+                    <SelectTrigger className="dark-input shadow-none border border-border/40">
                       <SelectValue placeholder="Select accent color" />
                     </SelectTrigger>
                     <SelectContent>
@@ -439,7 +439,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-6">
-          <Card className="dark-card">
+          <Card className="dark-card shadow-none border border-border/40">
             <CardHeader>
               <CardTitle>Notification Preferences</CardTitle>
               <CardDescription>
@@ -481,7 +481,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                     setNotificationFrequency(value)
                   }
                 >
-                  <SelectTrigger className="dark-input">
+                  <SelectTrigger className="dark-input shadow-none border border-border/40">
                     <SelectValue placeholder="Select frequency" />
                   </SelectTrigger>
                   <SelectContent>
@@ -514,7 +514,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
         </TabsContent>
 
         <TabsContent value="advanced" className="space-y-6">
-          <Card className="dark-card">
+          <Card className="dark-card shadow-none border border-border/40">
             <CardHeader>
               <CardTitle>Advanced Settings</CardTitle>
               <CardDescription>
@@ -530,14 +530,14 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                 <div className="flex space-x-2">
                   <Button
                     variant="outline"
-                    className="dark-input"
+                    className="dark-input shadow-none border border-border/40"
                     onClick={() => handleExportData("csv")}
                   >
                     Export as CSV
                   </Button>
                   <Button
                     variant="outline"
-                    className="dark-input"
+                    className="dark-input shadow-none border border-border/40"
                     onClick={() => handleExportData("json")}
                   >
                     Export as JSON

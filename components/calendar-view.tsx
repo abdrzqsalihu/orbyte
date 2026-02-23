@@ -116,7 +116,7 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <div className="flex items-center px-4 py-1 rounded-md bg-secondary border border-border font-medium">
+          <div className="flex items-center px-4 py-1 rounded-md dark-card bg-card border border-border/50 font-medium">
             {format(currentDate, "MMMM yyyy")}
           </div>
           <Button
@@ -156,7 +156,7 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
             <Button
               key={i}
               variant="outline"
-              className={`h-16 md:h-24 p-1 flex flex-col items-start justify-start bg-secondary border-border hover:bg-secondary/80 ${
+              className={`h-16 md:h-24 p-1 flex flex-col items-start justify-start dark-card bg-card border-border/60 hover:bg-secondary/80 shadow-none ${
                 !isSameMonth(day, currentDate) ? "text-muted-foreground/50" : ""
               } ${
                 isSelected
@@ -210,7 +210,7 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
               {selectedDateTasks.map((task) => (
                 <Card
                   key={task.id}
-                  className="cursor-pointer hover:bg-secondary/80 transition-colors bg-secondary border-border"
+                  className="cursor-pointer hover:bg-secondary/80 transition-colors bg-card border-border/50 shadow-none"
                   onClick={() => handleEditTask(task)}
                 >
                   <CardContent className="p-4 flex justify-between items-center">
