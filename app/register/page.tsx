@@ -117,8 +117,8 @@ export default function Register() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[380px]">
           {!isSubmitted ? (
             <>
-              <div className="flex flex-col space-y-2 text-center">
-                <h1 className="text-3xl font-semibold tracking-tight">
+              <div className="flex flex-col space-y-1 md:space-y-2 text-left">
+                <h1 className="text-xl md:text-3xl font-semibold tracking-tight">
                   Get Started
                 </h1>
                 <p className="text-sm text-muted-foreground">
@@ -132,21 +132,23 @@ export default function Register() {
                   variant="outline"
                   onClick={handleGoogleSignUp}
                   disabled={isLoading || isOAuthLoading}
-                  className="h-11"
+                  className="h-10 md:h-11 text-xs md:text-sm hover:bg-transparent hover:opacity-80"
                 >
                   {isOAuthLoading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-3.5 w-3.5 md:h-4 md:w-4 animate-spin" />
                   ) : (
-                    <GoogleIcon />
+                    <>
+                      <GoogleIcon />
+                      <span>Sign up with Google</span>
+                    </>
                   )}
-                  Sign up with Google
                 </Button>
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
                   </div>
-                  <div className="relative flex justify-center text-xs uppercase">
+                  <div className="relative flex justify-center text-[11px] md:text-xs uppercase">
                     <span className="bg-background px-2 text-muted-foreground">
                       Or use your email
                     </span>
@@ -166,7 +168,9 @@ export default function Register() {
                 )}
 
                 <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-xs md:text-sm">
+                    Email
+                  </Label>
                   <Input
                     id="email"
                     placeholder="name@orbyte.com"
@@ -175,12 +179,14 @@ export default function Register() {
                     disabled={isLoading || isOAuthLoading}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-11 border-muted-foreground/20"
+                    className="md:h-11 h-10 border-muted-foreground/20 text-sm"
                   />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="text-xs md:text-sm">
+                    Password
+                  </Label>
                   <Input
                     id="password"
                     type="password"
@@ -188,13 +194,13 @@ export default function Register() {
                     disabled={isLoading || isOAuthLoading}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 border-muted-foreground/20"
+                    className="md:h-11 h-10 border-muted-foreground/20 text-sm"
                   />
                 </div>
 
                 <Button
                   disabled={isLoading || isOAuthLoading}
-                  className="h-11 font-medium"
+                  className="md:h-11 h-10 font-medium text-[13px] md:text-sm"
                 >
                   {isLoading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -204,7 +210,7 @@ export default function Register() {
                 </Button>
               </form>
 
-              <p className="text-center text-sm text-muted-foreground">
+              <p className="text-center text-[13px] md:text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                   href="/login"
@@ -221,8 +227,10 @@ export default function Register() {
                 <Zap className="h-10 w-10 text-primary" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-2xl font-bold">Check your email</h2>
-                <p className="text-muted-foreground">
+                <h2 className="text-xl md:text-2xl font-bold">
+                  Check your email
+                </h2>
+                <p className="text-muted-foreground text-sm md:text-base">
                   We&apos;ve sent a verification link to{" "}
                   <span className="font-semibold text-foreground">{email}</span>
                   .

@@ -15,7 +15,6 @@ import {
   Zap,
   Menu,
   ChevronRight,
-  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
@@ -30,6 +29,7 @@ export function Sidebar() {
   const { theme, toggleTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -43,6 +43,10 @@ export function Sidebar() {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   const handleLogout = async () => {
     toast.loading("Logging out...");
@@ -74,12 +78,10 @@ export function Sidebar() {
   ];
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-background text-foreground px-4 py-8">
+    <div className="flex flex-col h-full bg-card dark:bg-background text-foreground px-4 py-8 shadow-none border-none">
       {/* Brand Logo */}
       <div className="flex items-center gap-3 px-2 mb-8">
-        {/* <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground"> */}
         <Zap className="h-6 w-6 text-primary" />
-        {/* </div> */}
         <span className="text-xl font-bold tracking-tight text-foreground">
           Orbyte
         </span>
@@ -98,10 +100,11 @@ export function Sidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group",
                     active
-                      ? "bg-secondary text-secondary-foreground font-semibold"
+                      ? " bg-secondary/50 text-secondary-foreground font-semibold"
                       : "hover:bg-secondary/40 text-muted-foreground hover:text-foreground",
                   )}
                 >
@@ -110,6 +113,7 @@ export function Sidebar() {
                       "h-5 w-5 transition-colors",
                       active ? "text-primary" : "group-hover:text-primary",
                     )}
+                    strokeWidth={1.5}
                   />
                   <span className="text-sm">{item.name}</span>
                   {active && (
@@ -127,14 +131,23 @@ export function Sidebar() {
           </p>
           <Link
             href="/dashboard/settings"
+            onClick={() => setMobileOpen(false)}
             className={cn(
               "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all",
               pathname === "/dashboard/settings"
-                ? "bg-secondary text-secondary-foreground font-semibold"
+                ? " bg-secondary/50 text-secondary-foreground font-semibold"
                 : "hover:bg-secondary/40 text-muted-foreground hover:text-foreground",
             )}
           >
-            <Settings className="h-5 w-5" />
+            <Settings
+              className={cn(
+                "h-5 w-5 transition-colors",
+                pathname === "/dashboard/settings"
+                  ? "text-primary"
+                  : "group-hover:text-primary",
+              )}
+              strokeWidth={1.5}
+            />
             <span className="text-sm">Settings</span>
           </Link>
         </div>
@@ -159,7 +172,10 @@ export function Sidebar() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleLogout}
+            onClick={async () => {
+              setMobileOpen(false);
+              await handleLogout();
+            }}
             disabled={isLoggingOut}
             className="h-9 w-9 rounded-xl text-muted-foreground hover:bg-destructive/10 transition-all cursor-pointer hover:text-destructive"
             title="Log out"
@@ -172,7 +188,6 @@ export function Sidebar() {
         <div className="p-3 bg-secondary/30 rounded-xl border border-border/50 transition-colors hover:bg-secondary/40">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10 border-2 border-background ring-1 ring-border/10 overflow-hidden">
-              {/* 2. ADD THIS AvatarImage TAG HERE */}
               <AvatarImage
                 src={
                   user?.user_metadata?.avatar_url ||
@@ -191,7 +206,6 @@ export function Sidebar() {
                     user?.user_metadata?.name ||
                     "User Account"}
                 </p>
-                {/* <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" /> */}
               </div>
               <p className="text-[11px] text-muted-foreground truncate font-medium">
                 {user?.email}
@@ -206,7 +220,7 @@ export function Sidebar() {
   return (
     <>
       <div className="md:hidden fixed top-4 left-4 z-40">
-        <Sheet>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <Button
               variant="outline"
@@ -225,7 +239,7 @@ export function Sidebar() {
         </Sheet>
       </div>
 
-      <aside className="hidden md:flex w-72 flex-col h-screen sticky top-0 border-r border-border/50 bg-background">
+      <aside className="hidden md:flex w-72 flex-col h-screen sticky top-0 bg-card dark:bg-background border-r border-border/30 dark:border-border/50">
         <SidebarContent />
       </aside>
     </>

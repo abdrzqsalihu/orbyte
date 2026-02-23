@@ -273,7 +273,7 @@ export function OverviewDashboard({
     <div className="space-y-6">
       {/* Stats Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="dark-card">
+        <Card className="dark-card shadow-none border border-border/40">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -299,7 +299,7 @@ export function OverviewDashboard({
           </CardContent>
         </Card>
 
-        <Card className="dark-card">
+        <Card className="dark-card shadow-none border border-border/40">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -326,7 +326,7 @@ export function OverviewDashboard({
           </CardContent>
         </Card>
 
-        <Card className="dark-card">
+        <Card className="dark-card shadow-none border border-border/40">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -351,7 +351,7 @@ export function OverviewDashboard({
           </CardContent>
         </Card>
 
-        <Card className="dark-card">
+        <Card className="dark-card shadow-none border border-border/40">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -381,11 +381,11 @@ export function OverviewDashboard({
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 dark-card">
+        <Card className="lg:col-span-2 dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-lg font-medium text-white">
+                <CardTitle className="text-lg font-medium">
                   Task Activity
                 </CardTitle>
                 <CardDescription>
@@ -435,7 +435,7 @@ export function OverviewDashboard({
           </CardContent>
         </Card>
 
-        <Card className="dark-card">
+        <Card className="dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">
               Priority Distribution
@@ -466,7 +466,7 @@ export function OverviewDashboard({
 
       {/* Productivity Trend & Upcoming Tasks */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 dark-card">
+        <Card className="lg:col-span-2 dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">
               Completion Rate Trend
@@ -514,7 +514,7 @@ export function OverviewDashboard({
           </CardContent>
         </Card>
 
-        <Card className="dark-card">
+        <Card className="dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">
               Upcoming Deadlines
@@ -527,7 +527,7 @@ export function OverviewDashboard({
                 upcomingTasks.map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-center p-3 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors cursor-pointer border border-border/40"
+                    className="flex items-center p-3 rounded-lg bg-secondary/40 hover:bg-secondary/60 transition-colors cursor-pointer border border-border/40"
                     onClick={() => handleEditTask(task)}
                   >
                     <div className="mr-3">

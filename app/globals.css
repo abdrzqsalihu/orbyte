@@ -2,28 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+
+*, :before, :after {
+  border-width: 0;
+  border-style: solid;
+  border-color: hsl(var(--border));
+}
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Warm off-white base instead of stark white */
+    --background: 220 20% 97%;
+    --foreground: 224 15% 12%;
+
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 224 15% 12%;
+
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 224 15% 12%;
+
     --primary: 252 87% 67%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+
+    --secondary: 220 15% 93%;
+    --secondary-foreground: 224 15% 20%;
+
+    --muted: 220 15% 93%;
+    --muted-foreground: 220 10% 48%;
+
     --accent: 252 87% 67%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
+
+    --destructive: 0 84% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
     --ring: 252 87% 67%;
     --radius: 0.5rem;
+
+    --grid-color: 220 15% 70%;
   }
 
   .dark {
@@ -51,50 +69,73 @@
 
 @layer base {
   * {
-    @apply border-border;
+    /* @apply border-border; */
   }
+
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    /* font-feature-settings: "rlig" 1, "calt" 1; */
   }
 
-  /* Web3 UI Styles */
-  .glow {
+  /* .glow {
     box-shadow: 0 0 8px rgba(var(--accent) / 0.3);
-  }
-
-  .glow-text {
+  } */
+  /* .glow-text {
     text-shadow: 0 0 5px rgba(var(--accent) / 0.5);
   }
-
   .glass {
     background: rgba(var(--card) / 0.7);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(var(--border) / 0.7);
+  } */
+
+  /* Light mode: dot-grid with neutral gray */
+  .grid-bg {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(
+        circle,
+        hsl(var(--grid-color) / 0.35) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        hsl(var(--grid-color) / 0.12) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        hsl(var(--grid-color) / 0.12) 1px,
+        transparent 1px
+      );
+    background-size: 24px 24px, 24px 24px, 24px 24px;
   }
 
-  .grid-bg {
-    background-image: linear-gradient(rgba(var(--accent) / 0.05) 1px, transparent 1px),
+  /* Dark mode: restore your original grid exactly */
+  .dark .grid-bg {
+    background-image:
+      linear-gradient(rgba(var(--accent) / 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(var(--accent) / 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
-  /* Dark theme enhancements */
+  /* Dark theme enhancements — untouched */
   .dark .deep-black {
     background-color: #080a10;
   }
-
   .dark .dark-card {
     background-color: #0f111a;
     border-color: rgba(255, 255, 255, 0.05);
   }
-
   .dark .dark-input {
     background-color: #161a25;
     border-color: rgba(255, 255, 255, 0.05);
   }
-
   .dark .dark-glow {
     box-shadow: 0 0 10px rgba(var(--accent) / 0.2);
   }
+}
+
+
+*, :before, :after {
+  box-sizing: border-box;
 }
