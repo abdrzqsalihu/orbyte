@@ -78,7 +78,7 @@ export function TaskModal({ task, onClose, onSubmit }: TaskModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="deep-black rounded-xl w-full max-w-md p-6 relative border border-border/40 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white deep-black rounded-xl w-full max-w-md p-6 relative border border-border/40 max-h-[90vh] overflow-y-auto">
         <Button
           variant="ghost"
           size="icon"
