@@ -29,10 +29,106 @@ interface FullViewNote {
   created_at: string;
 }
 
+interface DeleteConfirmationModalProps {
+  noteTitle: string;
+  isOpen: boolean;
+  isDeleting: boolean;
+  onConfirm: () => Promise<void>;
+  onCancel: () => void;
+}
+
+const DeleteConfirmationModal = ({
+  noteTitle,
+  isOpen,
+  isDeleting,
+  onConfirm,
+  onCancel,
+}: DeleteConfirmationModalProps) => {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      onClick={onCancel}
+    >
+      <Card
+        className="w-full max-w-sm bg-card border-border/50 flex flex-col animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <CardHeader className="px-6 py-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center flex-shrink-0">
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-sm md:text-base font-bold">Delete note?</h2>
+                <p className="text-xs text-muted-foreground">
+                  This action cannot be undone.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 flex-shrink-0"
+              onClick={onCancel}
+              disabled={isDeleting}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent className="px-6 pb-4">
+          <div className="p-3 bg-secondary/50 rounded-lg border border-border/50">
+            <p className="text-sm font-medium line-clamp-2 break-words">
+              {noteTitle}
+            </p>
+          </div>
+        </CardContent>
+
+        <CardFooter className="border-t border-border/50 px-6 py-4 flex gap-3 justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onCancel}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="bg-red-600 hover:bg-red-700 text-white"
+            size="sm"
+            onClick={onConfirm}
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              <>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </>
+            )}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
+
+
 export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteConfirmNoteId, setDeleteConfirmNoteId] = useState<string | null>(
+    null,
+  );
   const [fullViewNote, setFullViewNote] = useState<FullViewNote | null>(null);
   const [notes, setNotes] = useState(initialNotes);
   const router = useRouter();
@@ -68,12 +164,9 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
     }
   };
 
-  const handleDeleteNote = async (noteId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Are you sure you want to delete this note?")) return;
-
-    const toastId = toast.loading("Deleting note...");
+  const handleDeleteNote = async (noteId: string): Promise<void> => {
     setDeletingId(noteId);
+    const toastId = toast.loading("Deleting note...");
 
     const { error } = await supabase.from("notes").delete().eq("id", noteId);
 
@@ -90,6 +183,19 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
     setDeletingId(null);
   };
 
+
+  const handleDeleteClick = (noteId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDeleteConfirmNoteId(noteId);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteConfirmNoteId) {
+      await handleDeleteNote(deleteConfirmNoteId);
+      setDeleteConfirmNoteId(null);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -102,6 +208,8 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
   const isContentLong = (content: string) => {
     return content.length > 300 || content.split("\n").length > 6;
   };
+
+  const noteToDelete = notes.find((n) => n.id === deleteConfirmNoteId);
 
   return (
     <div className="h-full">
@@ -150,7 +258,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
                   variant="ghost"
                   size="sm"
                   className="h-6 w-6 md:h-8 md:w-8 p-0 -mt-2 -mr-2 hover:bg-destructive/20"
-                  onClick={(e) => handleDeleteNote(note.id, e)}
+                  onClick={(e) => handleDeleteClick(note.id, e)}
                   disabled={deletingId === note.id}
                 >
                   {deletingId === note.id ? (
@@ -226,6 +334,17 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
             </CardFooter>
           </Card>
         </div>
+      )}
+
+
+      {noteToDelete && (
+        <DeleteConfirmationModal
+          noteTitle={noteToDelete.title}
+          isOpen={deleteConfirmNoteId !== null}
+          isDeleting={deletingId === deleteConfirmNoteId}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setDeleteConfirmNoteId(null)}
+        />
       )}
 
       {isNoteModalOpen && (

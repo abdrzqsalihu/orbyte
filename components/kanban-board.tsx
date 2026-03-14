@@ -186,7 +186,6 @@ const useTaskOperations = (
   };
 
   const handleDelete = async (taskId: string): Promise<void> => {
-    if (!confirm("Delete this task?")) return;
     setDeletingId(taskId);
     const toastId = toast.loading("Deleting task...");
 
@@ -517,6 +516,98 @@ const TaskDetailsModal = ({ task, onClose, onEdit }: TaskDetailsModalProps) => (
   </div>
 );
 
+interface DeleteConfirmationModalProps {
+  taskTitle: string;
+  isOpen: boolean;
+  isDeleting: boolean;
+  onConfirm: () => Promise<void>;
+  onCancel: () => void;
+}
+
+const DeleteConfirmationModal = ({
+  taskTitle,
+  isOpen,
+  isDeleting,
+  onConfirm,
+  onCancel,
+}: DeleteConfirmationModalProps) => {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      onClick={onCancel}
+    >
+      <Card
+        className="w-full max-w-md bg-card border-border/50 flex flex-col animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <CardHeader className="px-6 py-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center flex-shrink-0">
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-sm md:text-base font-bold">Delete task?</h2>
+                <p className="text-xs text-muted-foreground">
+                  This action cannot be undone.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 flex-shrink-0"
+              onClick={onCancel}
+              disabled={isDeleting}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent className="px-6 pb-4">
+          <div className="p-3 bg-secondary/50 rounded-lg border border-border/50">
+            <p className="text-sm font-medium line-clamp-2 break-words">
+              {taskTitle}
+            </p>
+          </div>
+        </CardContent>
+
+        <CardFooter className="border-t border-border/50 px-6 py-4 flex gap-3 justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onCancel}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="bg-red-600 hover:bg-red-700 text-white"
+            size="sm"
+            onClick={onConfirm}
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              <>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </>
+            )}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
+
 export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
   const router = useRouter();
   const {
@@ -531,6 +622,9 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [fullViewTask, setFullViewTask] = useState<Task | null>(null);
+  const [deleteConfirmTaskId, setDeleteConfirmTaskId] = useState<string | null>(
+    null,
+  );
 
   const handleEditTask = (task: Task) => {
     setCurrentTask(task);
@@ -552,6 +646,20 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
     setIsTaskModalOpen(false);
     setCurrentTask(null);
   };
+
+  const handleDeleteClick = (taskId: string) => {
+    setDeleteConfirmTaskId(taskId);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteConfirmTaskId) {
+      await handleDelete(deleteConfirmTaskId);
+      setDeleteConfirmTaskId(null);
+    }
+  };
+
+  const taskToDelete = tasks.find((t) => t.id === deleteConfirmTaskId);
+
 
   return (
     <div className="h-full flex flex-col">
@@ -583,7 +691,7 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
                 tasks={tasks}
                 deletingId={deletingId}
                 onEditTask={handleEditTask}
-                onDeleteTask={handleDelete}
+                onDeleteTask={async (taskId) => handleDeleteClick(taskId)}
                 onViewTask={setFullViewTask}
               />
             ))}
@@ -604,6 +712,16 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
           task={currentTask}
           onClose={handleCloseModal}
           onSubmit={handleModalSubmit}
+        />
+      )}
+
+      {taskToDelete && (
+        <DeleteConfirmationModal
+          taskTitle={taskToDelete.title}
+          isOpen={deleteConfirmTaskId !== null}
+          isDeleting={deletingId === deleteConfirmTaskId}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setDeleteConfirmTaskId(null)}
         />
       )}
     </div>
