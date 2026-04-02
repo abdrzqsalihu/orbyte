@@ -1,9 +1,16 @@
 import type React from "react";
 import type { Metadata } from "next";
+import { Barlow } from "next/font/google";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProvider } from "@/hooks/use-theme";
 import "./globals.css";
 import { Toaster } from "sonner";
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 
 export const metadata: Metadata = {
   title: "Orbyte | Modern Task Management",
@@ -18,7 +25,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <body
+        suppressHydrationWarning={true}
+        className={`${barlow.className} antialiased`}
+      >
         <Toaster position="top-right" />
         <NextThemesProvider
           attribute="class"

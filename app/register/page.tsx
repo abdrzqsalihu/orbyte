@@ -92,16 +92,14 @@ export default function Register() {
                           radial-gradient(circle at 80% 80%, hsl(var(--primary)) 0%, transparent 40%)`,
           }}
         />
-
-        {/* Content stays on top with z-10 */}
-        <div className="relative z-10 flex items-center text-lg font-medium">
+        <Link href="/" className="relative z-10 flex items-center text-lg font-medium">
           <Zap className="mr-2 h-6 w-6 text-primary" />
           Orbyte
-        </div>
+        </Link>
 
         <div className="relative z-10 mt-auto">
           <blockquote className="space-y-4">
-            <p className="text-3xl font-medium tracking-tight leading-tight">
+            <p className="text-3xl font-semibold tracking-tight leading-tight">
               The central orbit for your entire workflow.
             </p>
             <p className="text-lg text-muted-foreground font-light">

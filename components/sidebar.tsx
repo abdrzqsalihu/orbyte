@@ -80,12 +80,12 @@ export function Sidebar() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-card dark:bg-background text-foreground px-4 py-8 shadow-none border-none">
       {/* Brand Logo */}
-      <div className="flex items-center gap-3 px-2 mb-8">
+      <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-2 mb-8">
         <Zap className="h-6 w-6 text-primary" />
         <span className="text-xl font-bold tracking-tight text-foreground">
           Orbyte
         </span>
-      </div>
+      </Link>
 
       {/* Navigation Groups */}
       <div className="flex-1 space-y-8">

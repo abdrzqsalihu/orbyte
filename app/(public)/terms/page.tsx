@@ -7,9 +7,9 @@ export default function Terms() {
         <div className="min-h-screen bg-background p-6 md:p-12 lg:p-24">
             <div className="mx-auto max-w-3xl space-y-8">
                 <div className="flex items-center justify-between">
-                    <Link href="/register" className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <Link href="/" className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Register
+                        Back
                     </Link>
                     <div className="flex items-center text-lg font-medium">
                         <Zap className="mr-2 h-5 w-5 text-primary" />
