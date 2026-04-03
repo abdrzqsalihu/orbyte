@@ -1,12 +1,12 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Barlow } from "next/font/google";
+import { IBM_Plex_Sans } from "next/font/google";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProvider } from "@/hooks/use-theme";
 import "./globals.css";
 import { Toaster } from "sonner";
 
-const barlow = Barlow({
+const barlow = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400"],
 });

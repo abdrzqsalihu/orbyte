@@ -10,6 +10,33 @@
 }
 
 @layer base {
+   html {
+    scroll-behavior: smooth !important;
+  }
+   /* Chrome, Edge, Safari */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border) / 0.4);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--border) / 0.6);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border) / 0.4) transparent;
+  }
   :root {
     --background: 220 20% 97%;
     --foreground: 224 15% 12%;
