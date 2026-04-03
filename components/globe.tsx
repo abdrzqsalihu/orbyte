@@ -41,55 +41,50 @@ export default function Globe() {
   ];
 
   return (
-    <div className="relative w-full aspect-square max-w-[500px] mx-auto flex items-center justify-center p-8">
+    <div className="relative w-full mx-auto flex items-center justify-center p-3 sm:p-4 md:p-8">
+      <div className="relative w-full max-w-[500px] aspect-square">
+        <div className="absolute inset-4 border border-border/30 bg-muted/5 z-0" />
+        <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-border/40 -translate-x-1/2 z-0" />
+        <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-border/40 -translate-y-1/2 z-0" />
 
-      {/* --- STRUCTURAL FRAMING --- */}
-      <div className="absolute inset-4 border border-border/30 bg-muted/5 z-0" />
-      <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-border/40 -translate-x-1/2 z-0" />
-      <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-border/40 -translate-y-1/2 z-0" />
-
-      {/* Subtle layout rings */}
-      <div className="absolute inset-8 rounded-full border border-border/20 border-dashed z-0 animate-[spin_120s_linear_infinite]" />
-      <div className="absolute inset-16 rounded-full border border-border/40 z-0" />
-
-      {/* --- TASK MANAGEMENT DATA OVERLAYS --- */}
-
-      {/* Top Left: Workspace Sync Status */}
-      <div className="absolute top-8 left-8 z-20 flex items-center gap-2 bg-background border border-border px-2 py-1 text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
-        <Activity className="h-3 w-3 text-primary animate-pulse" />
-        <span>Live Workspace</span>
-      </div>
-
-      {/* Bottom Right: Task Execution Metrics */}
-      <div className="absolute bottom-8 right-8 z-20 flex flex-col items-end gap-1 text-[10px] font-mono text-muted-foreground uppercase tracking-wider text-right">
-        <div className="bg-background border border-border px-2 py-1 flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-          TEAMS SYNCED
+        <div className="absolute inset-8 rounded-full border border-border/20 border-dashed z-0 animate-[spin_120s_linear_infinite]" />
+        <div className="absolute inset-16 rounded-full border border-border/40 z-0" />
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 md:top-8 md:left-8 z-20 flex items-center gap-1 sm:gap-2 bg-background border border-border px-1.5 sm:px-2 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
+          <Activity className="h-2 w-2 sm:h-3 sm:w-3 text-primary animate-pulse flex-shrink-0" />
+          <span className="hidden sm:inline">Live Workspace</span>
+          <span className="sm:hidden">Live</span>
         </div>
-        <div className="bg-background border border-border px-2 py-1 flex items-center gap-2">
-          <CheckSquare className="h-3 w-3 text-muted-foreground" />
-          ACTIVE TASKS: 1,204
+
+        <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 md:bottom-8 md:right-8 z-20 flex flex-col items-end gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-mono text-muted-foreground uppercase tracking-wider text-right">
+          <div className="bg-background border border-border px-1 sm:px-2 py-0.5 sm:py-1 flex items-center gap-1 sm:gap-2 whitespace-nowrap">
+            <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-green-500"></span>
+            <span className="hidden sm:inline">Teams Synced</span>
+            <span className="sm:hidden">Teams</span>
+          </div>
+          <div className="bg-background border border-border px-1 sm:px-2 py-0.5 sm:py-1 flex items-center gap-1 sm:gap-2">
+            <CheckSquare className="h-2 w-2 sm:h-3 sm:w-3 text-muted-foreground flex-shrink-0" />
+            <span className="hidden sm:inline">Active Tasks: 1,204</span>
+            <span className="sm:hidden">1,204</span>
+          </div>
         </div>
-      </div>
 
-      {/* Top Right: Collaboration Indicator */}
-      <div className="absolute top-1/4 right-0 translate-x-1/2 bg-background border border-border p-1.5 text-primary z-20 hidden md:block">
-        <Users className="h-3 w-3" />
-      </div>
-
-      {/* --- THE GLOBE COMPONENT --- */}
-      <div className="absolute inset-16 z-10 flex items-center justify-center pointer-events-none">
-        <div className="w-full h-full relative">
-          <World data={sampleArcs} globeConfig={globeConfig} />
+        <div className="absolute top-1/4 right-0 translate-x-1/2 bg-background border border-border p-1 sm:p-1.5 text-primary z-20 hidden md:block">
+          <Users className="h-3 w-3" />
         </div>
+
+        <div className="absolute inset-8 z-10 flex items-center justify-center pointer-events-none">
+          <div className="w-full h-full relative">
+            <World data={sampleArcs} globeConfig={globeConfig} />
+          </div>
+        </div>
+
+        {/* Corner bracket accents */}
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-2 h-2 sm:w-4 sm:h-4 border-t-2 border-l-2 border-primary/50" />
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-2 h-2 sm:w-4 sm:h-4 border-t-2 border-r-2 border-primary/50" />
+        <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 w-2 h-2 sm:w-4 sm:h-4 border-b-2 border-l-2 border-primary/50" />
+        <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 w-2 h-2 sm:w-4 sm:h-4 border-b-2 border-r-2 border-primary/50" />
+
       </div>
-
-      {/* Corner bracket accents */}
-      <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-primary/50" />
-      <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-primary/50" />
-      <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-primary/50" />
-      <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-primary/50" />
-
     </div>
   );
 }
