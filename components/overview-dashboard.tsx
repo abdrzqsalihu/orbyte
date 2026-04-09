@@ -49,7 +49,6 @@ export function OverviewDashboard({
   const legendColor = isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
 
   const [tasks, setTasks] = useState(initialTasks);
-  const [timeframe, setTimeframe] = useState("week");
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const supabase = createClient();
@@ -298,7 +297,7 @@ export function OverviewDashboard({
                 variant="outline"
                 className="bg-accent/10 text-accent border-accent/30"
               >
-                <ArrowUpRight className="mr-1 h-3 w-3" />
+                <ArrowUpRight className="mr-1 h-3 w-3" strokeWidth={1.25} />
                 Live data
               </Badge>
               <span className="ml-2 text-muted-foreground">from database</span>
@@ -316,7 +315,7 @@ export function OverviewDashboard({
                 <h3 className="text-2xl font-bold mt-1">{completionRate}%</h3>
               </div>
               <div className="h-12 w-12 rounded-full bg-purple-500/20 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-purple-500" />
+                <CheckCircle2 className="h-6 w-6 text-purple-500" strokeWidth={1.25} />
               </div>
             </div>
             <div className="mt-4 flex items-center text-sm">
@@ -343,7 +342,7 @@ export function OverviewDashboard({
                 <h3 className="text-2xl font-bold mt-1">{inProgressTasks}</h3>
               </div>
               <div className="h-12 w-12 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <Clock className="h-6 w-6 text-blue-500" />
+                <Clock className="h-6 w-6 text-blue-500" strokeWidth={1.25} />
               </div>
             </div>
             <div className="mt-4 flex items-center text-sm">
@@ -368,7 +367,7 @@ export function OverviewDashboard({
                 <h3 className="text-2xl font-bold mt-1">{highPriorityTasks}</h3>
               </div>
               <div className="h-12 w-12 rounded-full bg-red-500/20 flex items-center justify-center">
-                <AlertCircle className="h-6 w-6 text-red-500" />
+                <AlertCircle className="h-6 w-6 text-red-500" strokeWidth={1.25} />
               </div>
             </div>
             <div className="mt-4 flex items-center text-sm">
@@ -392,7 +391,7 @@ export function OverviewDashboard({
           <CardHeader className="pb-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-lg font-medium">
+                <CardTitle className="text-base md:text-lg font-medium">
                   Task Activity
                 </CardTitle>
                 <CardDescription>
@@ -433,7 +432,7 @@ export function OverviewDashboard({
 
         <Card className="dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-base md:text-lg font-medium">
               Priority Distribution
             </CardTitle>
             <CardDescription>Current task breakdown</CardDescription>
@@ -462,7 +461,7 @@ export function OverviewDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2 dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-base md:text-lg font-medium">
               Completion Rate Trend
             </CardTitle>
             <CardDescription>
@@ -502,7 +501,7 @@ export function OverviewDashboard({
 
         <Card className="dark-card shadow-none border border-border/40">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-base md:text-lg font-medium">
               Upcoming Deadlines
             </CardTitle>
             <CardDescription>Tasks due in next 7 days</CardDescription>

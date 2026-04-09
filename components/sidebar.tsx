@@ -113,7 +113,7 @@ export function Sidebar() {
                       "h-5 w-5 transition-colors",
                       active ? "text-primary" : "group-hover:text-primary",
                     )}
-                    strokeWidth={1.5}
+                    strokeWidth={1.25}
                   />
                   <span className="text-sm">{item.name}</span>
                   {active && (
@@ -146,7 +146,7 @@ export function Sidebar() {
                   ? "text-primary"
                   : "group-hover:text-primary",
               )}
-              strokeWidth={1.5}
+              strokeWidth={1.25}
             />
             <span className="text-sm">Settings</span>
           </Link>

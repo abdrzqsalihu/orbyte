@@ -8,7 +8,7 @@ const Metrics = () => {
                         <div className="text-[10px] md:text-xs font-mono text-muted-foreground uppercase tracking-widest">Real-time Sync</div>
                     </div>
                     <div className="flex flex-col items-center md:items-start px-4">
-                        <div className="text-xl md:text-3xl font-semibold tracking-tighter text-foreground mb-1">2M+</div>
+                        <div className="text-xl md:text-3xl font-semibold tracking-tighter text-foreground mb-1">50k+</div>
                         <div className="text-[10px] md:text-xs font-mono text-muted-foreground uppercase tracking-widest">Tasks Executed</div>
                     </div>
                     <div className="flex flex-col items-center md:items-start px-4">

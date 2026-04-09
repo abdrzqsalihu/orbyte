@@ -41,11 +41,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="flex-1 overflow-auto p-4 md:p-6 pt-16 md:pt-6">
         <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-xl md:text-2xl font-bold text-foreground">
               {/* Orbyte */}
               {getPageTitle()}
             </h1>
-            <p className="text-muted-foreground">{getPageSubtext()}</p>
+            <p className="text-muted-foreground text-sm md:text-base">{getPageSubtext()}</p>
           </div>
         </div>
 

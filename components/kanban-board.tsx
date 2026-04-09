@@ -449,7 +449,7 @@ const TaskDetailsModal = ({ task, onClose, onEdit }: TaskDetailsModalProps) => (
                 {getColumnTitle(task.status)}
               </Badge>
             </div>
-            <h2 className="text-2xl font-bold break-words">{task.title}</h2>
+            <h2 className="text-xl md:text-2xl font-bold break-words">{task.title}</h2>
           </div>
           <Button
             variant="ghost"
@@ -465,7 +465,7 @@ const TaskDetailsModal = ({ task, onClose, onEdit }: TaskDetailsModalProps) => (
       <CardContent className="flex-1 overflow-y-auto px-6 py-6">
         <div className="space-y-6">
           <div>
-            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+            <h3 className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
               Description
             </h3>
             <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
@@ -475,7 +475,7 @@ const TaskDetailsModal = ({ task, onClose, onEdit }: TaskDetailsModalProps) => (
 
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <h3 className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 Due Date
               </h3>
               <div className="flex items-center gap-2 text-sm">
@@ -484,7 +484,7 @@ const TaskDetailsModal = ({ task, onClose, onEdit }: TaskDetailsModalProps) => (
               </div>
             </div>
             <div>
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <h3 className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 Category
               </h3>
               <div className="flex items-center gap-2 text-sm">
@@ -681,7 +681,7 @@ export function KanbanBoard({ initialTasks, userId }: KanbanBoardProps) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 md:overflow-hidden">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full p-2 auto-rows-max md:auto-rows-fr">
             {COLUMNS.map((column) => (
