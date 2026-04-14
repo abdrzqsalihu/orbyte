@@ -58,18 +58,18 @@ const COLUMNS: Column[] = [
 // UTILITIES
 const getPriorityColor = (priority: string): string => {
   const priorityMap: Record<string, string> = {
-    high: "bg-red-500 text-white",
-    medium: "bg-amber-500 text-white",
-    low: "bg-blue-500 text-white",
+    high: "bg-red-800 hover:bg-red-800",
+    medium: "bg-amber-800 hover:bg-amber-800",
+    low: "bg-slate-700 hover:bg-slate-700",
   };
-  return priorityMap[priority] || "bg-slate-500 text-white";
+  return priorityMap[priority] || "bg-slate-500";
 };
 
 const getPriorityBarColor = (priority: string): string => {
   const colors: Record<string, string> = {
-    high: "bg-red-500",
-    medium: "bg-amber-500",
-    low: "bg-blue-500",
+    high: "bg-red-800",
+    medium: "bg-amber-800",
+    low: "bg-slate-700",
   };
   return colors[priority] || "bg-slate-500";
 };
@@ -255,7 +255,7 @@ const TaskCard = ({
             <div className="pl-3 pt-3 pr-3 pb-2">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <Badge
-                  className={`${getPriorityColor(task.priority)} text-[10px] py-0 md:px-2 md:text-xs flex-shrink-0`}
+                  className={`${getPriorityColor(task.priority)} text-[10px] py-0 md:px-2 md:text-[11px] flex-shrink-0 text-white/80`}
                 >
                   {task.priority.charAt(0).toUpperCase() +
                     task.priority.slice(1)}

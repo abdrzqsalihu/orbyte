@@ -40,7 +40,6 @@ interface OverviewDashboardProps {
 
 export function OverviewDashboard({
   initialTasks,
-  userId,
 }: OverviewDashboardProps) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -263,12 +262,12 @@ export function OverviewDashboard({
         backgroundColor: [
           "rgba(239, 68, 68, 0.8)",
           "rgba(245, 158, 11, 0.8)",
-          "rgba(16, 185, 129, 0.8)",
+          "rgba(102, 109, 122, 0.8)",
         ],
         borderColor: [
           "rgba(239, 68, 68, 1)",
           "rgba(245, 158, 11, 1)",
-          "rgba(16, 185, 129, 1)",
+          "rgba(102, 109, 122, 1)",
         ],
         borderWidth: 1,
       },
@@ -525,8 +524,8 @@ export function OverviewDashboard({
                           <Clock className="h-4 w-4 text-amber-500" />
                         </div>
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            <div className="h-8 w-8 rounded-full bg-slate-500/30 flex items-center justify-center">
+                              <Clock className="h-4 w-4 text-slate-500" />
                         </div>
                       )}
                     </div>

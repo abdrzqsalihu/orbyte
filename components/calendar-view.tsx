@@ -32,7 +32,6 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
-  const router = useRouter();
   const supabase = createClient();
 
   const monthStart = startOfMonth(currentDate);
@@ -183,7 +182,7 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
                         ? "bg-red-500/20 text-red-400"
                         : task.priority === "medium"
                           ? "bg-amber-500/20 text-amber-400"
-                          : "bg-blue-500/20 text-blue-400"
+                        : "bg-slate-500/20 text-slate-400"
                     }`}
                   >
                     {task.title}
@@ -223,10 +222,10 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
                     <Badge
                       className={
                         task.priority === "high"
-                          ? "bg-red-500 text-white"
+                          ? "bg-red-700 text-white"
                           : task.priority === "medium"
-                            ? "bg-amber-500 text-white"
-                            : "bg-blue-500 text-white"
+                            ? "bg-amber-700 text-white"
+                            : "bg-slate-700 text-white"
                       }
                     >
                       {task.priority}
