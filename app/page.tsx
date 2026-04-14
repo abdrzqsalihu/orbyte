@@ -1,23 +1,3 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Zap,
-  ArrowRight,
-  LayoutDashboard,
-  Calendar,
-  CheckSquare,
-  Palette,
-  Download,
-  FileSpreadsheet,
-  Terminal,
-  Columns,
-  PieChart,
-  Github,
-  Twitter,
-} from "lucide-react";
-
-// Placeholder for your custom components
-import GlobeDemo from "@/components/globe";
 import { Header } from "./components/Header";
 import Hero from "./components/Hero";
 import Metrics from "./components/Metrics";
@@ -45,7 +25,6 @@ export default function LandingPage() {
       </main>
       {/* Footer*/}
       <Footer />
-
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import type React from "react";
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { PwaProvider } from "@/components/pwa-provider";
-import { ThemeProvider } from "@/hooks/use-theme";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider as AppThemeProvider } from "@/hooks/use-theme";
 import "./globals.css";
 import { Toaster } from "sonner";
 
@@ -53,13 +53,9 @@ export default function RootLayout({
       >
         <PwaProvider />
         <Toaster position="top-right" />
-        <NextThemesProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-        >
-          <ThemeProvider>{children}</ThemeProvider>
-        </NextThemesProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <AppThemeProvider>{children}</AppThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
