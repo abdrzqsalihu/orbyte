@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { User, Bell, Moon, Sun, Palette, Zap, Loader2 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { createClient } from "@/lib/supabase/client";
@@ -462,7 +463,10 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label className="text-sm md:text-base">Email Notifications</Label>
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm md:text-base">Email Notifications</Label>
+                    <Badge variant="secondary" className="text-[10px] bg-primary/40 py-0 px-1">Coming Soon</Badge>
+                  </div>
                   <p className="text-xs md:text-sm text-muted-foreground">
                     Receive notifications via email
                   </p>
@@ -470,6 +474,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                 <Switch
                   checked={emailNotifications}
                   onCheckedChange={setEmailNotifications}
+                  disabled
                 />
               </div>
 

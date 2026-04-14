@@ -36,6 +36,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { Task } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useNotificationService } from "@/hooks/use-notifications";
 
 // TYPES & CONSTANTS
 interface KanbanBoardProps {
@@ -95,6 +96,7 @@ const useTaskOperations = (
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const supabase = createClient();
+  const notify = useNotificationService(userId);
 
   const handleDragEnd = async (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -123,6 +125,12 @@ const useTaskOperations = (
       setTasks(tasks);
       toast.error("Failed to move task");
     } else {
+      if (newStatus === "done") {
+        const completedTask = tasks.find((t) => t.id === draggableId);
+        if (completedTask) {
+          notify.notifyTaskCompleted(completedTask.title);
+        }
+      }
       router.refresh();
     }
   };
@@ -145,6 +153,7 @@ const useTaskOperations = (
     if (data) {
       setTasks((prev) => [...prev, data]);
       toast.success("Task created", { id: toastId });
+      notify.notifyTaskCreated(taskData.title);
     }
   };
 

@@ -34,3 +34,13 @@ export interface UserProfile {
   created_at: string;
   updated_at: string;
 }
+
+export interface AppNotification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: "task" | "note" | "reminder" | "system";
+  is_read: boolean;
+  created_at: string;
+}
