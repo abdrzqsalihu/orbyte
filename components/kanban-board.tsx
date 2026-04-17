@@ -32,60 +32,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { TaskModal } from "@/components/task-modal";
+import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 import { createClient } from "@/lib/supabase/client";
 import type { Task } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useNotificationService } from "@/hooks/use-notifications";
+import {
+  COLUMNS,
+  getPriorityColor,
+  getPriorityBarColor,
+  formatDate,
+  getColumnTitle,
+  type Column,
+} from "@/lib/utils";
 
-// TYPES & CONSTANTS
 interface KanbanBoardProps {
   initialTasks: Task[];
   userId: string;
 }
-
-interface Column {
-  id: Task["status"];
-  title: string;
-  badge: string;
-}
-
-const COLUMNS: Column[] = [
-  { id: "todo", title: "To Do", badge: "Planned" },
-  { id: "inprogress", title: "In Progress", badge: "Active" },
-  { id: "done", title: "Done", badge: "Completed" },
-];
-
-// UTILITIES
-const getPriorityColor = (priority: string): string => {
-  const priorityMap: Record<string, string> = {
-    high: "bg-red-800 hover:bg-red-800",
-    medium: "bg-amber-800 hover:bg-amber-800",
-    low: "bg-slate-700 hover:bg-slate-700",
-  };
-  return priorityMap[priority] || "bg-slate-500";
-};
-
-const getPriorityBarColor = (priority: string): string => {
-  const colors: Record<string, string> = {
-    high: "bg-red-800",
-    medium: "bg-amber-800",
-    low: "bg-slate-700",
-  };
-  return colors[priority] || "bg-slate-500";
-};
-
-const formatDate = (dateString: string | null): string => {
-  if (!dateString) return "No due date";
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-};
-
-const getColumnTitle = (statusId: string): string => {
-  return COLUMNS.find((c) => c.id === statusId)?.badge || "";
-};
 
 // CUSTOM HOOKS
 const useTaskOperations = (
@@ -220,8 +185,6 @@ const useTaskOperations = (
     handleDelete,
   };
 };
-
-// SUB-COMPONENTS
 interface TaskCardProps {
   task: Task;
   index: number;
@@ -432,98 +395,6 @@ const KanbanColumn = ({
   );
 };
 
-interface TaskDetailsModalProps {
-  task: Task;
-  onClose: () => void;
-  onEdit: (task: Task) => void;
-}
-
-const TaskDetailsModal = ({ task, onClose, onEdit }: TaskDetailsModalProps) => (
-  <div
-    className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-    onClick={onClose}
-  >
-    <Card
-      className="w-full max-w-3xl max-h-[90vh] overflow-hidden bg-card border-border/50 flex flex-col"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <CardHeader className="px-6 py-5 border-b border-border/50">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-3 flex-wrap">
-              <Badge className={getPriorityColor(task.priority)}>
-                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-              </Badge>
-              <Badge variant="outline" className="bg-secondary/50 text-xs">
-                {getColumnTitle(task.status)}
-              </Badge>
-            </div>
-            <h2 className="text-xl md:text-2xl font-bold break-words">{task.title}</h2>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 flex-shrink-0"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-      </CardHeader>
-
-      <CardContent className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
-              Description
-            </h3>
-            <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-              {task.description || "No description provided"}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                Due Date
-              </h3>
-              <div className="flex items-center gap-2 text-sm">
-                <Calendar className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                {formatDate(task.due_date)}
-              </div>
-            </div>
-            <div>
-              <h3 className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                Category
-              </h3>
-              <div className="flex items-center gap-2 text-sm">
-                <FolderOpen className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                {task.category}
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-
-      <CardFooter className="border-t border-border/50 px-6 py-4 flex gap-3 justify-end">
-        <Button variant="outline" size="sm" onClick={onClose}>
-          Close
-        </Button>
-        <Button
-          className="bg-primary hover:bg-primary/90"
-          size="sm"
-          onClick={() => {
-            onEdit(task);
-            onClose();
-          }}
-        >
-          <Edit2 className="mr-2 h-4 w-4" />
-          Edit
-        </Button>
-      </CardFooter>
-    </Card>
-  </div>
-);
 
 interface DeleteConfirmationModalProps {
   taskTitle: string;

@@ -156,12 +156,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <p className="text-muted-foreground text-sm md:text-base">{getPageSubtext()}</p>
           </div>
 
-          <Popover>
+          <Popover >
             <PopoverTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative text-muted-foreground hover:text-foreground"
+                className="relative text-muted-foreground hover:text-foreground hidden md:block"
               >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (

@@ -271,7 +271,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                     className="dark-input text-sm"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Your email address is used for login and notifications
+                    Your email address cannot be changed
                   </p>
                 </div>
 

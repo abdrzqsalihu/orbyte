@@ -16,22 +16,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TaskModal } from "@/components/task-modal";
+import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 import { createClient } from "@/lib/supabase/client";
 import type { Task } from "@/lib/types";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { getPriorityColor } from "@/lib/utils";
 
 interface CalendarViewProps {
   initialTasks: Task[];
   userId: string;
 }
 
-export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
+export function CalendarView({ initialTasks }: CalendarViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
+  const [fullViewTask, setFullViewTask] = useState<Task | null>(null);
   const supabase = createClient();
 
   const monthStart = startOfMonth(currentDate);
@@ -210,25 +212,17 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
                 <Card
                   key={task.id}
                   className="cursor-pointer hover:bg-secondary/80 transition-colors bg-card border-border/50 shadow-none"
-                  onClick={() => handleEditTask(task)}
+                  onClick={() => setFullViewTask(task)}
                 >
                   <CardContent className="p-4 flex justify-between items-center">
-                    <div>
+                    <div className="max-w-[95%]">
                       <div className="font-medium">{task.title}</div>
                       <div className="text-sm text-muted-foreground">
                         {task.description || "No description"}
                       </div>
                     </div>
-                    <Badge
-                      className={
-                        task.priority === "high"
-                          ? "bg-red-700 text-white"
-                          : task.priority === "medium"
-                            ? "bg-amber-700 text-white"
-                            : "bg-slate-700 text-white"
-                      }
-                    >
-                      {task.priority}
+                    <Badge className={getPriorityColor(task.priority)}>
+                      {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                     </Badge>
                   </CardContent>
                 </Card>
@@ -238,6 +232,14 @@ export function CalendarView({ initialTasks, userId }: CalendarViewProps) {
             <p className="text-muted-foreground">No tasks for this date</p>
           )}
         </div>
+      )}
+
+      {fullViewTask && (
+        <TaskDetailsModal
+          task={fullViewTask}
+          onClose={() => setFullViewTask(null)}
+          onEdit={handleEditTask}
+        />
       )}
 
       {isTaskModalOpen && (
