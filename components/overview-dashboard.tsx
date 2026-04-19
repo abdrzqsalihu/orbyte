@@ -16,9 +16,10 @@ import {
   ArrowUpRight,
   Calendar,
   CheckSquare,
-  AlertCircle,
+  AlertCircle
 } from "lucide-react";
 import { TaskModal } from "@/components/task-modal";
+import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 import { createClient } from "@/lib/supabase/client";
 import type { Task } from "@/lib/types";
 import {
@@ -50,6 +51,7 @@ export function OverviewDashboard({
   const [tasks, setTasks] = useState(initialTasks);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
+  const [fullViewTask, setFullViewTask] = useState<Task | null>(null);
   const supabase = createClient();
 
   // Calculate task statistics
@@ -512,7 +514,7 @@ export function OverviewDashboard({
                   <div
                     key={task.id}
                     className="flex items-center p-3 rounded-lg bg-secondary/40 hover:bg-secondary/60 transition-colors cursor-pointer border border-border/40"
-                    onClick={() => handleEditTask(task)}
+                    onClick={() => setFullViewTask(task)}
                   >
                     <div className="mr-3">
                       {task.priority === "high" ? (
@@ -549,6 +551,14 @@ export function OverviewDashboard({
           </CardContent>
         </Card>
       </div>
+
+      {fullViewTask && (
+        <TaskDetailsModal
+          task={fullViewTask}
+          onClose={() => setFullViewTask(null)}
+          onEdit={handleEditTask}
+        />
+      )}
 
       {isTaskModalOpen && (
         <TaskModal
