@@ -41,7 +41,7 @@ export async function checkAndNotifyDueTasks(supabaseAdmin: any) {
   // Fetch tasks due today that haven't been completed
   const { data: tasks, error } = await supabaseAdmin
     .from("tasks")
-    .select("*, user_profiles(notifications_enabled)")
+    .select("id, title, user_id")
     .eq("due_date", today)
     .neq("status", "done");
 
@@ -50,9 +50,26 @@ export async function checkAndNotifyDueTasks(supabaseAdmin: any) {
     return;
   }
 
+  if (!tasks || tasks.length === 0) return;
+
+  // Manual Join for preferences
+  const userIds = Array.from(new Set(tasks.map((t: any) => t.user_id)));
+  const { data: profiles, error: profileError } = await supabaseAdmin
+    .from("user_profiles")
+    .select("id, notifications_enabled, due_reminders_enabled")
+    .in("id", userIds);
+
+  if (profileError) {
+    console.error("Error fetching user profiles for due tasks:", profileError);
+    return;
+  }
+
+  const profileMap = new Map(profiles.map((p: any) => [p.id, p]));
+
   for (const task of tasks) {
-    // Only notify if user has notifications enabled
-    if (task.user_profiles?.notifications_enabled) {
+    const prefs: any = profileMap.get(task.user_id);
+    // Only notify if user has notifications enabled AND due reminders enabled
+    if (prefs?.notifications_enabled !== false && prefs?.due_reminders_enabled !== false) {
       await createNotification({
         userId: task.user_id,
         title: "Task Due Today",

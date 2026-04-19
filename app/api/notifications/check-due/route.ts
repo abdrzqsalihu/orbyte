@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
 
 /**
@@ -12,21 +12,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createClient();
-  const today = new Date().toISOString().split('T')[0];
+  // Use Admin Client to bypass RLS for the cron job
+  const supabase = createAdminClient();
+  
+  // Get date in YYYY-MM-DD format based on UTC
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  
+  console.log(`[Cron] Running check for: ${today}`);
 
   // Fetch tasks due today that are not completed
   const { data: tasks, error: tasksError } = await supabase
     .from("tasks")
-    .select(`
-      id,
-      title,
-      user_id,
-      user_profiles:user_id (
-        notifications_enabled,
-        due_reminders_enabled
-      )
-    `)
+    .select(`id, title, user_id, due_date, status`)
     .eq("due_date", today)
     .neq("status", "done");
 
@@ -36,13 +34,37 @@ export async function POST(request: Request) {
   }
 
   if (!tasks || tasks.length === 0) {
-    return NextResponse.json({ message: "No tasks due today" });
+    // Debug: Fetch a few tasks to see what's in the DB
+    const { data: recentTasks } = await supabase.from("tasks").select("title, due_date").limit(3);
+    console.log("[Cron] No tasks due today. Recent tasks in DB:", recentTasks);
+    
+    return NextResponse.json({ 
+      message: "No tasks due today",
+      checkedDate: today,
+      sampleTasks: recentTasks
+    });
   }
+
+  // Manual Join: Get unique user IDs and fetch their preferences separately
+  // This bypasses the foreign key relationship requirement in Supabase select()
+  const userIds = Array.from(new Set(tasks.map((t: any) => t.user_id)));
+  const { data: profiles, error: profilesError } = await supabase
+    .from("user_profiles")
+    .select("id, notifications_enabled, due_reminders_enabled")
+    .in("id", userIds);
+
+  if (profilesError) {
+    console.error("[Cron] Error fetching user profiles:", profilesError);
+    return NextResponse.json({ error: profilesError.message }, { status: 500 });
+  }
+
+  // Create a map for quick lookup
+  const profileMap = new Map(profiles.map((p: any) => [p.id, p]));
 
   // Filter based on user preferences and prepare bulk insert
   const notificationsToInsert = tasks
     .filter((task: any) => {
-      const prefs = task.user_profiles;
+      const prefs: any = profileMap.get(task.user_id);
       return prefs?.notifications_enabled !== false && prefs?.due_reminders_enabled !== false;
     })
     .map((task: any) => ({
