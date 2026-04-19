@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeProvider as AppThemeProvider } from "@/hooks/use-theme";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next"
 
 const barlow = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -51,6 +52,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${barlow.className} antialiased`}
       >
+        <Analytics />
         <PwaProvider />
         <Toaster position="top-right" />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

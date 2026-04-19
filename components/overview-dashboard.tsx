@@ -33,6 +33,7 @@ import {
 } from "date-fns";
 import { toast } from "sonner";
 import { useTheme } from "@/hooks/use-theme";
+import { useNotificationService } from "@/hooks/use-notifications";
 
 interface OverviewDashboardProps {
   initialTasks: Task[];
@@ -41,8 +42,10 @@ interface OverviewDashboardProps {
 
 export function OverviewDashboard({
   initialTasks,
+  userId,
 }: OverviewDashboardProps) {
   const { theme } = useTheme();
+  const notify = useNotificationService(userId);
   const isDark = theme === "dark";
   const tickColor = isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
   const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)";
@@ -204,6 +207,10 @@ export function OverviewDashboard({
     );
 
     toast.success("Task updated successfully", { id: toastId });
+
+    if (taskData.status === "done" && currentTask?.status !== "done") {
+      notify.notifyTaskCompleted(taskData.title);
+    }
   };
 
   const handleEditTask = (task: Task) => {

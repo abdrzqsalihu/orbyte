@@ -42,6 +42,9 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
   const [notifications, setNotifications] = useState(
     initialProfile?.notifications_enabled ?? true,
   );
+  const [dueReminders, setDueReminders] = useState(
+    initialProfile?.due_reminders_enabled ?? true,
+  );
   const [emailNotifications, setEmailNotifications] = useState(
     initialProfile?.email_notifications ?? true,
   );
@@ -131,6 +134,7 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
       theme: theme,
       accent_color: accentColor,
       notifications_enabled: notifications,
+      due_reminders_enabled: dueReminders,
       email_notifications: emailNotifications,
       notification_frequency: notificationFrequency,
       updated_at: new Date().toISOString(),
@@ -458,6 +462,19 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
                 <Switch
                   checked={notifications}
                   onCheckedChange={setNotifications}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-sm md:text-base">Due Date Reminders</Label>
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    Get alerted when tasks are due today
+                  </p>
+                </div>
+                <Switch
+                  checked={dueReminders}
+                  onCheckedChange={setDueReminders}
                 />
               </div>
 

@@ -16,6 +16,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { Note } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useNotificationService } from "@/hooks/use-notifications";
 
 interface NotesSectionProps {
   initialNotes: Note[];
@@ -133,6 +134,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
   const [notes, setNotes] = useState(initialNotes);
   const router = useRouter();
   const supabase = createClient();
+  const notify = useNotificationService(userId);
 
   const filteredNotes = notes.filter(
     (note) =>
@@ -161,10 +163,12 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
 
     if (data) {
       setNotes((prev) => [data, ...prev]);
+      notify.notifyNoteCreated(title);
     }
   };
 
   const handleDeleteNote = async (noteId: string): Promise<void> => {
+    const noteToDelete = notes.find((n) => n.id === noteId);
     setDeletingId(noteId);
     const toastId = toast.loading("Deleting note...");
 
@@ -178,6 +182,10 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
     }
 
     toast.success("Note deleted successfully", { id: toastId });
+
+    if (noteToDelete) {
+      notify.notifyNoteDeleted(noteToDelete.title);
+    }
 
     setNotes((prev) => prev.filter((n) => n.id !== noteId));
     setDeletingId(null);

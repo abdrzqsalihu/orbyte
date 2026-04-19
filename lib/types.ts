@@ -29,6 +29,7 @@ export interface UserProfile {
   theme: "light" | "dark";
   accent_color: string;
   notifications_enabled: boolean;
+  due_reminders_enabled: boolean;
   email_notifications: boolean;
   notification_frequency: "realtime" | "hourly" | "daily" | "weekly";
   created_at: string;
