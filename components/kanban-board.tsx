@@ -43,7 +43,6 @@ import {
   getPriorityColor,
   getPriorityBarColor,
   formatDate,
-  getColumnTitle,
   type Column,
 } from "@/lib/utils";
 
@@ -74,27 +73,36 @@ const useTaskOperations = (
     }
 
     const newStatus = destination.droppableId as Task["status"];
+    const taskToUpdate = tasks.find((t) => t.id === draggableId);
+
+    const updatePayload: any = {
+      status: newStatus,
+      position: destination.index,
+    };
+
+    // Track when task is completed
+    if (newStatus === "done" && taskToUpdate?.status !== "done") {
+      updatePayload.completed_at = new Date().toISOString();
+    } else if (newStatus !== "done" && taskToUpdate?.status === "done") {
+      updatePayload.completed_at = null;
+    }
+
     const updatedTasks = tasks.map((task) =>
-      task.id === draggableId
-        ? { ...task, status: newStatus, position: destination.index }
-        : task,
+      task.id === draggableId ? { ...task, ...updatePayload } : task,
     );
     setTasks(updatedTasks);
 
     const { error } = await supabase
       .from("tasks")
-      .update({ status: newStatus, position: destination.index })
+      .update(updatePayload)
       .eq("id", draggableId);
 
     if (error) {
       setTasks(tasks);
       toast.error("Failed to move task");
     } else {
-      if (newStatus === "done") {
-        const completedTask = tasks.find((t) => t.id === draggableId);
-        if (completedTask) {
-          notify.notifyTaskCompleted(completedTask.title);
-        }
+      if (newStatus === "done" && taskToUpdate?.status !== "done") {
+        notify.notifyTaskCompleted(taskToUpdate?.title || "");
       }
       router.refresh();
     }
@@ -140,6 +148,14 @@ const useTaskOperations = (
       updatePayload.due_date = taskData.due_date;
     }
 
+    const currentTask = tasks.find((t) => t.id === taskData.id);
+    // Track when task is completed
+    if (taskData.status === "done" && currentTask?.status !== "done") {
+      updatePayload.completed_at = new Date().toISOString();
+    } else if (taskData.status !== "done" && currentTask?.status === "done") {
+      updatePayload.completed_at = null;
+    }
+
     const { error } = await supabase
       .from("tasks")
       .update(updatePayload)
@@ -157,6 +173,7 @@ const useTaskOperations = (
     );
 
     toast.success("Task updated", { id: toastId });
+    router.refresh();
   };
 
   const handleDelete = async (taskId: string): Promise<void> => {

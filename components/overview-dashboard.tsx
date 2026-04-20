@@ -22,6 +22,7 @@ import { TaskModal } from "@/components/task-modal";
 import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 import { createClient } from "@/lib/supabase/client";
 import type { Task } from "@/lib/types";
+import { useRouter } from "next/navigation";
 import {
   startOfWeek,
   endOfWeek,
@@ -45,6 +46,7 @@ export function OverviewDashboard({
   userId,
 }: OverviewDashboardProps) {
   const { theme } = useTheme();
+  const router = useRouter();
   const notify = useNotificationService(userId);
   const isDark = theme === "dark";
   const tickColor = isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
@@ -211,6 +213,7 @@ export function OverviewDashboard({
     if (taskData.status === "done" && currentTask?.status !== "done") {
       notify.notifyTaskCompleted(taskData.title);
     }
+    router.refresh();
   };
 
   const handleEditTask = (task: Task) => {

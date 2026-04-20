@@ -19,6 +19,7 @@ import { TaskModal } from "@/components/task-modal";
 import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 import { createClient } from "@/lib/supabase/client";
 import type { Task } from "@/lib/types";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { getPriorityColor } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ interface CalendarViewProps {
 }
 
 export function CalendarView({ initialTasks }: CalendarViewProps) {
+  const router = useRouter();
   const [tasks, setTasks] = useState(initialTasks);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -79,6 +81,13 @@ export function CalendarView({ initialTasks }: CalendarViewProps) {
       updatePayload.due_date = taskData.due_date;
     }
 
+    // Track when task is completed
+    if (taskData.status === "done" && currentTask?.status !== "done") {
+      updatePayload.completed_at = new Date().toISOString();
+    } else if (taskData.status !== "done" && currentTask?.status === "done") {
+      updatePayload.completed_at = null;
+    }
+
     const { error } = await supabase
       .from("tasks")
       .update(updatePayload)
@@ -97,6 +106,7 @@ export function CalendarView({ initialTasks }: CalendarViewProps) {
     );
 
     toast.success("Task updated successfully", { id: toastId }); // replace loading
+    router.refresh();
   };
 
   const handleEditTask = (task: Task) => {
