@@ -2,7 +2,7 @@
 
 Orbyte is a modern, high-performance productivity platform designed to help individuals and teams stay organized, focused, and in control of their workflow.
 
-Built with speed and simplicity at its core, Orbyte combines powerful task management tools with a clean, intuitive interface—so you can spend less time managing work and more time actually doing it.
+Built with speed and simplicity at its core, Orbyte combines powerful task management tools with a clean, intuitive interface so you can spend less time managing work and more time actually doing it.
 
 ## Why Orbyte?
 
