@@ -1,40 +1,46 @@
 # Orbyte
 
-Orbyte is a modern, high-performance task management and productivity platform built with **Next.js 16**, **Supabase**, and **Tailwind CSS**. It streamlines work processes, enhances productivity, and improves team collaboration through a sleek, user-friendly interface.
+Orbyte is a modern, high-performance productivity platform designed to help individuals and teams stay organized, focused, and in control of their workflow.
 
-## 🚀 Features
+Built with speed and simplicity at its core, Orbyte combines powerful task management tools with a clean, intuitive interface so you can spend less time managing work and more time actually doing it.
 
-- **Dynamic Landing Page**: A modern, dark-themed landing page featuring hero sections, feature highlights, and performance metrics.
-- **Comprehensive Dashboard**:
-  - **Overview**: High-level summary of your tasks and productivity metrics.
-  - **Kanban Board**: Drag-and-drop workflow management using `@hello-pangea/dnd`.
-  - **Calendar View**: Visual task scheduling and deadline tracking.
-  - **Notes**: A dedicated section for quick notes and thoughts.
-- **Authentication**: Secure login and registration powered by **Supabase Auth**.
-- **Realtime Updates**: Seamless data synchronization across tabs and devices using Supabase Realtime.
+## Why Orbyte?
+
+Most productivity tools are either too simple or overwhelmingly complex. Orbyte sits in the sweet spot:
+
+- Fast and responsive (built with modern web tech)
+- Thoughtfully designed UX (minimal friction, maximum clarity)
+- Real-time sync across devices
+- Works like a native app (PWA support)
+
+## Features
+### Unified Workspace
+
+A single place to manage everything:
+
+- **Dashboard Overview**: Get a high-level view of tasks, activity, and productivity trends.
+- **Kanban Board**: Organize workflows visually with drag-and-drop simplicity.
+- **Calendar View**: Plan ahead with clear scheduling and deadline tracking.
+- **Notes**: Capture quick thoughts, ideas, or reminders without breaking flow.
+- **Authentication**: Secure login and registration.
 - **Automated Notifications**:
   - In-app notifications for task updates.
-  - Daily task reminders triggered via **Vercel Cron** jobs.
+  - Daily task reminders.
 - **Progressive Web App (PWA)**: Installable on mobile and desktop for a native-like experience, featuring offline support and home screen shortcuts.
-- **Modern UI/UX**:
-  - Built with **shadcn/ui** and **Radix UI** primitives.
-  - Smooth animations with **Framer Motion**.
-  - Responsive design for all screen sizes.
-  - Interactive 3D globe visualization.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Database & Auth**: [Supabase](https://supabase.com/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Components**: [shadcn/ui](https://ui.shadcn.com/) / [Radix UI](https://www.radix-ui.com/)
+- **Components**: [shadcn/ui](https://ui.shadcn.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Charts**: [Recharts](https://recharts.org/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **PWA**: Custom service worker and manifest implementation
 
-## 🏁 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -46,7 +52,7 @@ Orbyte is a modern, high-performance task management and productivity platform b
 
 1.  **Clone the repository**:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/abdrzqsalihu/orbyte.git
     cd orbyte
     ```
 
@@ -70,7 +76,7 @@ Orbyte is a modern, high-performance task management and productivity platform b
     ```
     Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📅 Cron Jobs
+## Cron Jobs
 
 Orbyte uses Vercel Cron to automate background tasks, such as checking for due tasks and sending notifications.
 
@@ -78,7 +84,7 @@ Orbyte uses Vercel Cron to automate background tasks, such as checking for due t
 - **Schedule**: Defined in `vercel.json` (defaults to daily at 08:00 UTC).
 - **Security**: Protected via `CRON_SECRET` authorization header.
 
-## 📱 PWA Support
+## PWA Support
 
 The application is fully PWA-compliant. You can install it on your device for:
 - Home screen icon
@@ -87,15 +93,10 @@ The application is fully PWA-compliant. You can install it on your device for:
 
 Configuration can be found in `app/manifest.ts` and `public/sw.js`.
 
-## 🚢 Deployment
+## License
 
-The project is optimized for deployment on [Vercel](https://vercel.com/):
+This project is source-available for learning and inspiration.
 
-1.  Push your code to GitHub.
-2.  Import the project in Vercel.
-3.  Configure the environment variables in the Vercel dashboard.
-4.  Vercel will automatically detect the `vercel.json` and set up the cron jobs.
+You are welcome to explore the code and learn from it, but you may not use it to build or distribute a competing product without permission.
 
-## 📄 License
-
-This project is private and for internal use only.
+All rights reserved.
