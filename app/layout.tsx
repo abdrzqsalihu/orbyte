@@ -17,7 +17,7 @@ const barlow = IBM_Plex_Sans({
 export const metadata: Metadata = {
   title: "Orbyte | Modern Task Management",
   description:
-    "Streamline work processes, enhance productivity, and improve team collaboration",
+    "Streamline work processes, enhance productivity, and improve your workflow",
   applicationName: "Orbyte",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
