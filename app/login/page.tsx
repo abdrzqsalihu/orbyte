@@ -99,10 +99,10 @@ export default function Login() {
 
         <div className="relative z-10 mt-auto">
           <blockquote className="space-y-4">
-            <p className="text-3xl font-semibold tracking-tight leading-tight">
+            <p className="text-3xl font-semibold tracking-tight leading-tighter">
               The central orbit for your entire workflow.
             </p>
-            <p className="text-lg text-muted-foreground font-light">
+            <p className="text-lg text-muted-foreground font-light tracking-tight">
               A task management platform designed to help you organize your day,
               hit your milestones, and execute every project with absolute
               precision.
@@ -116,7 +116,7 @@ export default function Login() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           {/* Header */}
           <div className="flex flex-col space-y-1 md:space-y-2 text-left">
-            <h1 className="text-xl md:text-3xl font-semibold tracking-tight">
+            <h1 className="text-xl md:text-2xl font-semibold tracking-tight">
               Welcome back
             </h1>
             <p className="text-sm text-muted-foreground">
