@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Loader2, Zap, ArrowRight } from "lucide-react";
+import { AlertCircle, Loader2, Zap } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 function GoogleIcon() {
   return (
@@ -44,31 +45,53 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOAuthLoading, setIsOAuthLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [supabase] = useState(() => createClient());
 
-  const supabase = createClient();
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        router.replace("/dashboard");
+      }
+    };
+
+    checkUser();
+  }, [router, supabase]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
     });
 
     if (error) {
       setError(error.message);
+      toast.error(error.message);
       setIsLoading(false);
       return;
     }
 
-    setIsLoading(false);
-    setIsSubmitted(true);
+    if (!data.session) {
+      setError(
+        "Email confirmation is still enabled in Supabase. Turn it off to sign users in immediately after signup."
+      );
+      toast.error(
+        "Email confirmation is still enabled in Supabase. Turn it off to sign users in immediately after signup."
+      );
+      setIsLoading(false);
+      return;
+    }
+
+    toast.success("Account created successfully");
+    router.push("/dashboard");
+    router.refresh();
   };
 
   const handleGoogleSignUp = async () => {
@@ -113,135 +136,108 @@ export default function Register() {
       {/* Main Form Section */}
       <div className="flex flex-col items-center justify-center p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[380px]">
-          {!isSubmitted ? (
-            <>
-              <div className="flex flex-col space-y-1 md:space-y-2 text-left">
-                <h1 className="text-xl md:text-3xl font-semibold tracking-tight">
-                  Get Started
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Create your Orbyte workspace in seconds.
-                </p>
+          <div className="flex flex-col space-y-1 md:space-y-2 text-left">
+            <h1 className="text-xl md:text-2xl font-semibold tracking-tighter">
+              Get Started
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Create your Orbyte workspace in seconds.
+            </p>
+          </div>
+
+          {/* OAuth Buttons */}
+          <div className="grid gap-4">
+            <Button
+              variant="outline"
+              onClick={handleGoogleSignUp}
+              disabled={isLoading || isOAuthLoading}
+              className="h-10 md:h-11 text-xs md:text-sm hover:bg-transparent hover:opacity-80"
+            >
+              {isOAuthLoading ? (
+                <Loader2 className="mr-2 h-3.5 w-3.5 md:h-4 md:w-4 animate-spin" />
+              ) : (
+                <>
+                  <GoogleIcon />
+                  <span>Sign up with Google</span>
+                </>
+              )}
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
               </div>
-
-              {/* OAuth Buttons */}
-              <div className="grid gap-4">
-                <Button
-                  variant="outline"
-                  onClick={handleGoogleSignUp}
-                  disabled={isLoading || isOAuthLoading}
-                  className="h-10 md:h-11 text-xs md:text-sm hover:bg-transparent hover:opacity-80"
-                >
-                  {isOAuthLoading ? (
-                    <Loader2 className="mr-2 h-3.5 w-3.5 md:h-4 md:w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <GoogleIcon />
-                      <span>Sign up with Google</span>
-                    </>
-                  )}
-                </Button>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-[11px] md:text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      Or use your email
-                    </span>
-                  </div>
-                </div>
+              <div className="relative flex justify-center text-[11px] md:text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or use your email
+                </span>
               </div>
-
-              {/* Manual Form */}
-              <form onSubmit={handleSignUp} className="grid gap-4">
-                {error && (
-                  <Alert variant="destructive" className="py-2">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-xs">
-                      {error}
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                <div className="grid gap-2">
-                  <Label htmlFor="email" className="text-xs md:text-sm">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    placeholder="name@orbyte.com"
-                    type="email"
-                    required
-                    disabled={isLoading || isOAuthLoading}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="md:h-11 h-10 border-muted-foreground/20 text-sm"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="password" className="text-xs md:text-sm">
-                    Password
-                  </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    required
-                    disabled={isLoading || isOAuthLoading}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="md:h-11 h-10 border-muted-foreground/20 text-sm"
-                  />
-                </div>
-
-                <Button
-                  disabled={isLoading || isOAuthLoading}
-                  className="md:h-11 h-10 font-medium text-[13px] md:text-sm"
-                >
-                  {isLoading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-              </form>
-
-              <p className="text-center text-[13px] md:text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link
-                  href="/login"
-                  className="font-medium text-primary hover:underline"
-                >
-                  Sign in
-                </Link>
-              </p>
-            </>
-          ) : (
-            /* Success State */
-            <div className="flex flex-col items-center space-y-6 text-center animate-in fade-in zoom-in duration-300">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                <Zap className="h-10 w-10 text-primary" />
-              </div>
-              <div className="space-y-2">
-                <h2 className="text-xl md:text-2xl font-bold">
-                  Check your email
-                </h2>
-                <p className="text-muted-foreground text-sm md:text-base">
-                  We&apos;ve sent a verification link to{" "}
-                  <span className="font-semibold text-foreground">{email}</span>
-                  .
-                </p>
-              </div>
-              <Link
-                href="/login"
-                className="flex items-center text-sm font-medium text-primary hover:underline"
-              >
-                Back to sign in <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
             </div>
-          )}
+          </div>
+
+          {/* Manual Form */}
+          <form onSubmit={handleSignUp} className="grid gap-4">
+            {error && (
+              <Alert variant="destructive" className="py-2">
+                <AlertCircle className="h-4 w-4 -mt-1.5" />
+                <AlertDescription className="text-xs mt-1">
+                  {error}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <div className="grid gap-2">
+              <Label htmlFor="email" className="text-xs md:text-sm">
+                Email
+              </Label>
+              <Input
+                id="email"
+                placeholder="name@orbyte.com"
+                type="email"
+                required
+                disabled={isLoading || isOAuthLoading}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="md:h-11 h-10 border-muted-foreground/20 text-sm"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="password" className="text-xs md:text-sm">
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                disabled={isLoading || isOAuthLoading}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="md:h-11 h-10 border-muted-foreground/20 text-sm"
+              />
+            </div>
+
+            <Button
+              disabled={isLoading || isOAuthLoading}
+              className="md:h-11 h-10 font-medium text-[13px] md:text-sm"
+            >
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Create Account"
+              )}
+            </Button>
+          </form>
+
+          <p className="text-center text-[13px] md:text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-medium text-primary hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
 
           {/* Legal */}
           <p className="text-[11px] text-center text-muted-foreground leading-tight px-6">

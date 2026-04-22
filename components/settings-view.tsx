@@ -21,7 +21,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { User, Bell, Moon, Sun, Palette, Zap, Loader2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { User, Bell, Moon, Sun, Palette, Zap, Loader2, AlertTriangle } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { createClient } from "@/lib/supabase/client";
 import type { UserProfile } from "@/lib/types";
@@ -57,6 +67,9 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
   const [isSavingPreferences, setIsSavingPreferences] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const handleSaveProfile = async () => {
     setIsSavingProfile(true);
@@ -204,27 +217,39 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    const confirmed = confirm(
-      "Are you absolutely sure? This action cannot be undone. All your data will be permanently deleted.",
-    );
+  const handleDeleteAccount = () => {
+    setIsDeleteDialogOpen(true);
+  };
 
-    if (!confirmed) return;
-
-    const text = prompt('Type "DELETE" to confirm account deletion:');
-    if (text !== "DELETE") {
-      toast.error("Account deletion cancelled");
+  const confirmDeleteAccount = async () => {
+    if (deleteConfirmationText !== "DELETE") {
+      toast.error('Please type "DELETE" to confirm');
       return;
     }
 
+    setIsDeletingAccount(true);
+    const toastId = toast.loading("Deleting your account...");
+
     try {
-      // Sign out (which will trigger cascading deletes via RLS policies)
-      await supabase.auth.signOut();
-      toast.success("Account deleted successfully");
+      const response = await fetch("/api/user/delete", {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to delete account");
+      }
+
+      toast.success("Account deleted successfully", { id: toastId });
+      setIsDeleteDialogOpen(false);
+
+      // Redirect to home page
       router.push("/");
-    } catch (error) {
+      router.refresh();
+    } catch (error: any) {
       console.error("Error deleting account:", error);
-      toast.error("Failed to delete account. Please contact support.");
+      toast.error(error.message || "Failed to delete account", { id: toastId });
+      setIsDeletingAccount(false);
     }
   };
 
@@ -581,6 +606,62 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent className="dark-card border-border/40 max-w-[400px]">
+          <AlertDialogHeader>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-full bg-red-500/10 text-red-500">
+                <AlertTriangle className="h-5 w-5" strokeWidth={1.25} />
+              </div>
+              <AlertDialogTitle className="text-sm md:text-base font-bold text-foreground">Delete Account</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="text-muted-foreground text-[13px]">
+              This action is <span className="text-red-500 font-semibold uppercase">permanent</span>.
+              All your tasks, notes, and profile data will be deleted forever.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className="py-4 space-y-3">
+            <Label htmlFor="delete-confirm" className="text-xs text-muted-foreground">
+              To confirm, type <span className="text-foreground font-mono font-bold">DELETE</span> below:
+            </Label>
+            <Input
+              id="delete-confirm"
+              value={deleteConfirmationText}
+              onChange={(e) => setDeleteConfirmationText(e.target.value)}
+              placeholder="Type DELETE"
+              className="dark-input border-red-500/30 focus-visible:ring-red-500/50 text-sm"
+              autoFocus
+            />
+          </div>
+
+          <AlertDialogFooter className="gap-2 sm:gap-0">
+            <AlertDialogCancel
+              disabled={isDeletingAccount}
+              className="dark-input border-border/40"
+              onClick={() => setDeleteConfirmationText("")}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteAccount}
+              disabled={isDeletingAccount || deleteConfirmationText !== "DELETE"}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeletingAccount ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Permanently Delete"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
