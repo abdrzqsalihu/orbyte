@@ -10,11 +10,20 @@ import { Textarea } from "@/components/ui/textarea";
 interface NoteModalProps {
   onClose: () => void;
   onSubmit: (title: string, content: string) => Promise<void>;
+  initialTitle?: string;
+  initialContent?: string;
+  isEditing?: boolean;
 }
 
-export function NoteModal({ onClose, onSubmit }: NoteModalProps) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+export function NoteModal({
+  onClose,
+  onSubmit,
+  initialTitle = "",
+  initialContent = "",
+  isEditing = false,
+}: NoteModalProps) {
+  const [title, setTitle] = useState(initialTitle);
+  const [content, setContent] = useState(initialContent);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +47,7 @@ export function NoteModal({ onClose, onSubmit }: NoteModalProps) {
         </Button>
 
         <h2 className="text-xl font-semibold mb-6 text-foreground">
-          Create New Note
+          {isEditing ? "Edit Note" : "Create New Note"}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,10 +97,10 @@ export function NoteModal({ onClose, onSubmit }: NoteModalProps) {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  {isEditing ? "Saving..." : "Creating..."}
                 </>
               ) : (
-                "Add Note"
+                  isEditing ? "Save Changes" : "Add Note"
               )}
             </Button>
           </div>

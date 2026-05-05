@@ -129,6 +129,14 @@ export const useNotificationService = (userId: string) => {
     });
   };
 
+  const notifyNoteUpdated = (noteTitle: string) => {
+    triggerNotification(userId, {
+      title: "Note Updated",
+      message: `"${noteTitle}" has been updated.`,
+      type: "note",
+    });
+  };
+
   const notifyNoteDeleted = (noteTitle: string) => {
     triggerNotification(userId, {
       title: "Note Deleted",
@@ -158,6 +166,7 @@ export const useNotificationService = (userId: string) => {
     notifyTaskCompleted,
     notifyTaskDeleted,
     notifyNoteCreated,
+    notifyNoteUpdated,
     notifyNoteDeleted,
     notifyReminder,
     notifySystem,
