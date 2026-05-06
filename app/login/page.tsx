@@ -99,7 +99,7 @@ export default function Login() {
 
         <div className="relative z-10 mt-auto">
           <blockquote className="space-y-4">
-            <p className="text-3xl font-semibold tracking-tight leading-tighter">
+            <p className="text-3xl font-semibold tracking-tight leading-tight">
               The central orbit for your entire workflow.
             </p>
             <p className="text-lg text-muted-foreground font-light tracking-tight">

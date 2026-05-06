@@ -79,12 +79,14 @@ export default function Register() {
     }
 
     if (!data.session) {
-      setError(
-        "Email confirmation is still enabled in Supabase. Turn it off to sign users in immediately after signup."
-      );
-      toast.error(
-        "Email confirmation is still enabled in Supabase. Turn it off to sign users in immediately after signup."
-      );
+      const authFeedbackMessage = "Please check your email to confirm your account";
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          "Email confirmation is still enabled in Supabase. Turn it off to sign users in immediately after signup."
+        );
+      }
+      setError(authFeedbackMessage);
+      toast.error(authFeedbackMessage);
       setIsLoading(false);
       return;
     }
@@ -97,10 +99,20 @@ export default function Register() {
   const handleGoogleSignUp = async () => {
     setError(null);
     setIsOAuthLoading(true);
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+
+      if (error) {
+        setError(error.message || String(error));
+        setIsOAuthLoading(false);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setIsOAuthLoading(false);
+    }
   };
 
   return (

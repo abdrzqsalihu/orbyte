@@ -177,6 +177,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
       .from("notes")
       .update({ title, content })
       .eq("id", editingNote.id)
+      .eq("user_id", userId)
       .select()
       .single();
 
@@ -200,7 +201,11 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
     setDeletingId(noteId);
     const toastId = toast.loading("Deleting note...");
 
-    const { error } = await supabase.from("notes").delete().eq("id", noteId);
+    const { error } = await supabase
+      .from("notes")
+      .delete()
+      .eq("id", noteId)
+      .eq("user_id", userId);
 
     if (error) {
       console.error("Error deleting note:", error);
@@ -416,6 +421,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
 
       {(isNoteModalOpen || editingNote) && (
         <NoteModal
+          key={editingNote ? `edit-${editingNote.id}` : "new"}
           onClose={() => {
             setIsNoteModalOpen(false);
             setEditingNote(null);
