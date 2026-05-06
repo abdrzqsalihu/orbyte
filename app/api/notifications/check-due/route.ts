@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
  * Automated cron job to check for tasks due today and trigger in-app notifications.
  * Triggered by Vercel Cron according to vercel.json schedule.
  */
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   // Verify secret from Vercel environment to prevent unauthorized pings
   const authHeader = request.headers.get("Authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {

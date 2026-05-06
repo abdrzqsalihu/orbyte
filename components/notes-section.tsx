@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlusCircle, Search, Trash2, Loader2, X } from "lucide-react";
+import { PlusCircle, Search, Trash2, Loader2, X, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -131,6 +131,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
     null,
   );
   const [fullViewNote, setFullViewNote] = useState<FullViewNote | null>(null);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [notes, setNotes] = useState(initialNotes);
   const router = useRouter();
   const supabase = createClient();
@@ -167,12 +168,44 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
     }
   };
 
+  const handleUpdateNote = async (title: string, content: string) => {
+    if (!editingNote) return;
+
+    const toastId = toast.loading("Updating note...");
+
+    const { data, error } = await supabase
+      .from("notes")
+      .update({ title, content })
+      .eq("id", editingNote.id)
+      .eq("user_id", userId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error updating note:", error);
+      toast.error("Failed to update note", { id: toastId });
+      return;
+    }
+
+    toast.success("Note updated successfully", { id: toastId });
+
+    if (data) {
+      setNotes((prev) => prev.map((n) => (n.id === data.id ? data : n)));
+      notify.notifyNoteUpdated(title);
+    }
+    setEditingNote(null);
+  };
+
   const handleDeleteNote = async (noteId: string): Promise<void> => {
     const noteToDelete = notes.find((n) => n.id === noteId);
     setDeletingId(noteId);
     const toastId = toast.loading("Deleting note...");
 
-    const { error } = await supabase.from("notes").delete().eq("id", noteId);
+    const { error } = await supabase
+      .from("notes")
+      .delete()
+      .eq("id", noteId)
+      .eq("user_id", userId);
 
     if (error) {
       console.error("Error deleting note:", error);
@@ -195,6 +228,11 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
   const handleDeleteClick = (noteId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setDeleteConfirmNoteId(noteId);
+  };
+
+  const handleEditClick = (note: Note, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingNote(note);
   };
 
   const handleConfirmDelete = async () => {
@@ -243,7 +281,7 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 md:h-[calc(100vh-200px)] overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 md:max-h-[calc(100vh-200px)] overflow-y-auto content-start">
         {filteredNotes.length > 0 ? (
           filteredNotes.map((note) => (
             <Card
@@ -262,19 +300,29 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
                 <CardTitle className="text-base md:text-lg line-clamp-2">
                   {note.title}
                 </CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 md:h-8 md:w-8 p-0 -mt-2 -mr-2 hover:bg-destructive/20"
-                  onClick={(e) => handleDeleteClick(note.id, e)}
-                  disabled={deletingId === note.id}
-                >
-                  {deletingId === note.id ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-4 w-4" />
-                  )}
-                </Button>
+                <div className="flex gap-1 -mt-2 -mr-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 md:h-8 md:w-8 p-0 hover:bg-primary/20"
+                    onClick={(e) => handleEditClick(note, e)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 md:h-8 md:w-8 p-0 hover:bg-destructive/20"
+                    onClick={(e) => handleDeleteClick(note.id, e)}
+                    disabled={deletingId === note.id}
+                  >
+                    {deletingId === note.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="flex-grow overflow-hidden">
                 <p className="text-muted-foreground whitespace-pre-wrap line-clamp-5 break-words text-sm">
@@ -331,13 +379,29 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
             <CardFooter className="border-t border-border/50 text-xs text-muted-foreground">
               <div className="w-full flex justify-between items-center mt-3">
                 <span>Created on {formatDate(fullViewNote.created_at)}</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setFullViewNote(null)}
-                >
-                  Close
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const note = notes.find((n) => n.id === fullViewNote.id);
+                      if (note) {
+                        setEditingNote(note);
+                        setFullViewNote(null);
+                      }
+                    }}
+                  >
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFullViewNote(null)}
+                  >
+                    Close
+                  </Button>
+                </div>
               </div>
             </CardFooter>
           </Card>
@@ -355,10 +419,17 @@ export function NotesSection({ initialNotes, userId }: NotesSectionProps) {
         />
       )}
 
-      {isNoteModalOpen && (
+      {(isNoteModalOpen || editingNote) && (
         <NoteModal
-          onClose={() => setIsNoteModalOpen(false)}
-          onSubmit={handleCreateNote}
+          key={editingNote ? `edit-${editingNote.id}` : "new"}
+          onClose={() => {
+            setIsNoteModalOpen(false);
+            setEditingNote(null);
+          }}
+          onSubmit={editingNote ? handleUpdateNote : handleCreateNote}
+          initialTitle={editingNote?.title}
+          initialContent={editingNote?.content}
+          isEditing={!!editingNote}
         />
       )}
     </div>

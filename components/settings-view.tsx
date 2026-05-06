@@ -39,6 +39,8 @@ import { useRouter } from "next/navigation";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { toast } from "sonner";
 
+const ACCOUNT_DELETE_CONFIRMATION = "DELETE";
+
 interface SettingsViewProps {
   user: SupabaseUser;
   initialProfile: UserProfile | null;
@@ -222,8 +224,8 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
   };
 
   const confirmDeleteAccount = async () => {
-    if (deleteConfirmationText !== "DELETE") {
-      toast.error('Please type "DELETE" to confirm');
+    if (deleteConfirmationText.trim().toUpperCase() !== ACCOUNT_DELETE_CONFIRMATION) {
+      toast.error(`Please type "${ACCOUNT_DELETE_CONFIRMATION}" to confirm`);
       return;
     }
 
@@ -607,7 +609,13 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
         </TabsContent>
       </Tabs>
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          setIsDeleteDialogOpen(open);
+          if (!open) setDeleteConfirmationText("");
+        }}
+      >
         <AlertDialogContent className="dark-card border-border/40 max-w-[400px]">
           <AlertDialogHeader>
             <div className="flex items-center gap-3 mb-2">
@@ -624,13 +632,13 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
 
           <div className="py-4 space-y-3">
             <Label htmlFor="delete-confirm" className="text-xs text-muted-foreground">
-              To confirm, type <span className="text-foreground font-mono font-bold">DELETE</span> below:
+              To confirm, type <span className="text-foreground font-mono font-bold">{ACCOUNT_DELETE_CONFIRMATION}</span> below:
             </Label>
             <Input
               id="delete-confirm"
               value={deleteConfirmationText}
               onChange={(e) => setDeleteConfirmationText(e.target.value)}
-              placeholder="Type DELETE"
+              placeholder={`Type ${ACCOUNT_DELETE_CONFIRMATION}`}
               className="dark-input border-red-500/30 focus-visible:ring-red-500/50 text-sm"
               autoFocus
             />
@@ -640,14 +648,13 @@ export function SettingsView({ user, initialProfile }: SettingsViewProps) {
             <AlertDialogCancel
               disabled={isDeletingAccount}
               className="dark-input border-border/40"
-              onClick={() => setDeleteConfirmationText("")}
             >
               Cancel
             </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={confirmDeleteAccount}
-              disabled={isDeletingAccount || deleteConfirmationText !== "DELETE"}
+              disabled={isDeletingAccount || deleteConfirmationText.trim().toUpperCase() !== ACCOUNT_DELETE_CONFIRMATION}
               className="bg-red-600 hover:bg-red-700"
             >
               {isDeletingAccount ? (
